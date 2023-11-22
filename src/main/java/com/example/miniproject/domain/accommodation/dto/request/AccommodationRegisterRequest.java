@@ -35,10 +35,10 @@ public record AccommodationRegisterRequest(
     @NotBlank
     String address,
 
-    @NotBlank
+    @NotNull
     Double latitude,
 
-    @NotBlank
+    @NotNull
     Double longitude,
 
     //추후 List<Multipart>로 교체
