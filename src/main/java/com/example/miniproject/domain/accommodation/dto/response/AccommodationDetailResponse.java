@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public record AccommodationDetailResponse(
+    Long id,
     String name,
     Double star,
     LocationResponse location,
@@ -17,6 +18,7 @@ public record AccommodationDetailResponse(
         Accommodation accommodation
     ) {
         this(
+            accommodation.getId(),
             accommodation.getName(),
             accommodation.getStar(),
             new LocationResponse(accommodation.getLocation()),
@@ -29,5 +31,6 @@ public record AccommodationDetailResponse(
                 .map(AccommodationImage::getUrl)
                 .toList()
         );
+        images.add(0, accommodation.getThumbnailUrl());
     }
 }
