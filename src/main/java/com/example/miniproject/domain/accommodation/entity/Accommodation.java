@@ -1,6 +1,6 @@
 package com.example.miniproject.domain.accommodation.entity;
 
-import com.example.miniproject.domain.room.entity.Room;
+import com.example.miniproject.domain.roomtype.entity.RoomType;
 import com.example.miniproject.global.constant.AccommodationType;
 import com.example.miniproject.global.constant.Region;
 import jakarta.persistence.*;
@@ -52,7 +52,7 @@ public class Accommodation {
     private final List<AccommodationImage> images = new ArrayList<>();
 
     @OneToMany(mappedBy = "accommodation", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private final List<Room> rooms = new ArrayList<>();
+    private final List<RoomType> roomTypes = new ArrayList<>();
 
     private Accommodation(
         AccommodationType type,
@@ -92,7 +92,7 @@ public class Accommodation {
         image.setAccommodation(this);
     }
 
-    public void addRoom(Room room) {
-        this.rooms.add(room);
+    public void addRoomType(RoomType roomType) {
+        this.roomTypes.add(roomType);
     }
 }
