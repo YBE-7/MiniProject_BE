@@ -1,13 +1,14 @@
 package com.example.miniproject.domain.accommodation.controller;
 
 import com.example.miniproject.domain.accommodation.dto.request.AccommodationRegisterRequest;
-import com.example.miniproject.domain.accommodation.dto.response.AccommodationRegisterResponse;
+import com.example.miniproject.domain.accommodation.dto.request.AccommodationSearchCondition;
 import com.example.miniproject.domain.accommodation.service.AccommodationService;
 import com.example.miniproject.global.utils.ApiUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +30,19 @@ public class AccommodationController {
             .body(
                 ApiUtils.success(
                     accommodationService.register(request)
+                )
+            );
+    }
+
+    @GetMapping
+    public ResponseEntity<?> searchAccommodations(
+        AccommodationSearchCondition condition
+    ) {
+        return ResponseEntity
+            .ok()
+            .body(
+                ApiUtils.success(
+                    accommodationService.search(condition)
                 )
             );
     }

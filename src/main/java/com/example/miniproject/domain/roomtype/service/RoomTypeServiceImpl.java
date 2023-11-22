@@ -25,7 +25,6 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             .orElseThrow(() -> new RuntimeException("존재하지 않는 엔티티"));
         RoomType roomType = request.toEntity(accommodation);
         request.images()
-            .stream()
             .forEach(image -> roomType.addImage(RoomTypeImage.create(image)));
         return new RoomTypeRegisterResponse(roomTypeRepository.save(roomType));
     }
