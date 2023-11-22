@@ -4,7 +4,6 @@ import com.example.miniproject.domain.member.entity.Member;
 import com.example.miniproject.global.constant.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 public record MemberSignUpRequest(
