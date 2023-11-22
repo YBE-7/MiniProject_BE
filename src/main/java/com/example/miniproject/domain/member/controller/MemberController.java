@@ -20,7 +20,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/members/signup")
-    public ResponseEntity<?> signUp(
+    public ResponseEntity<?> signup(
         @RequestBody @Valid MemberSignUpRequest request
     ) {
         return ResponseEntity
