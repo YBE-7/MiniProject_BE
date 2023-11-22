@@ -1,5 +1,6 @@
 package com.example.miniproject.domain.member.entity;
 
+import com.example.miniproject.global.constant.Role;
 import com.example.miniproject.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -23,16 +24,19 @@ public class Member extends BaseTimeEntity {
     private String name;
 
     @Column(nullable = false)
-    private String passWord;
+    private String password;
 
-    private Member(String email, String name, String passWord) {
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    private Member(String email, String name, String password, Role role) {
         this.name = name;
         this.email = email;
-        this.passWord = passWord;
+        this.password = password;
+        this.role = role;
     }
 
-    public static Member create(String email, String name, String passWord
-    ) {
-        return new Member(email, name, passWord);
+    public static Member create(String email, String name, String password, Role role) {
+        return new Member(email, name, password, role);
     }
 }
