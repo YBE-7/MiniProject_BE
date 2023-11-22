@@ -22,8 +22,8 @@ public record MemberSignUpRequest(
     public Member toEntity() {
         return Member.create(
             this.email,
-            this.password,
             this.name,
+            this.password,
             Role.MEMBER
         );
     }

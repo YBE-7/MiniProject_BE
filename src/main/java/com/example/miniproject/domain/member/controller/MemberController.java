@@ -1,5 +1,6 @@
 package com.example.miniproject.domain.member.controller;
 
+import com.example.miniproject.domain.member.dto.request.MemberLoginRequest;
 import com.example.miniproject.domain.member.dto.request.MemberSignUpRequest;
 import com.example.miniproject.domain.member.service.MemberService;
 import com.example.miniproject.global.utils.ApiUtils;
@@ -13,13 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/members")
 @RequiredArgsConstructor
 public class MemberController {
 
     private final MemberService memberService;
 
-    @PostMapping("/members/signup")
+    @PostMapping("/signup")
     public ResponseEntity<?> signup(
         @RequestBody @Valid MemberSignUpRequest request
     ) {
@@ -28,6 +29,19 @@ public class MemberController {
             .body(
                 ApiUtils.success(
                     memberService.signUp(request)
+                )
+            );
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(
+        @RequestBody @Valid MemberLoginRequest request
+    ) {
+        return ResponseEntity
+            .ok()
+            .body(
+                ApiUtils.success(
+                    memberService.login(request)
                 )
             );
     }
