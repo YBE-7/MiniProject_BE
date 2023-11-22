@@ -11,7 +11,9 @@ public record AccommodationSearchCondition(
     LocalDate checkinDate,
     LocalDate checkoutDate,
     Integer capacity,
-    SearchOrderCondition order
+    SearchOrderCondition order,
+    Integer page,
+    Integer size
 ) {
 
 }

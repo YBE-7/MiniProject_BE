@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "order")
+@Table(name = "orders")
 @Entity
 public class Order extends BaseTimeEntity {
 
