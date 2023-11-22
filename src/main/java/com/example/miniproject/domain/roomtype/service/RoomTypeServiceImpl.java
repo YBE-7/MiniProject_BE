@@ -10,6 +10,7 @@ import com.example.miniproject.domain.roomtype.entity.RoomType;
 import com.example.miniproject.domain.roomtype.entity.RoomTypeImage;
 import com.example.miniproject.domain.roomtype.repository.RoomTypeRepository;
 import com.example.miniproject.global.exception.NoSuchEntityException;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
     }
 
     @Override
+    @Transactional
     public List<RoomTypeResponse> getRoomTypes(
         Long accommodationId,
         RoomTypeSearchCondition condition
@@ -45,9 +47,27 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             .findByAccommodationAndCapacityGreaterThanEqual(accommodation, condition.capacity())
             .stream()
             .map(roomType -> {
-                Long stock = roomTypeRepository.findStockBySearchCondition(roomType, condition);
+                Long stock = getStock(
+                    roomType,
+                    condition.checkinDate(),
+                    condition.checkoutDate()
+                );
                 return new RoomTypeResponse(roomType, stock);
             })
             .toList();
+    }
+
+    @Override
+    @Transactional
+    public Long getStock(
+        RoomType roomType,
+        LocalDate checkinDate,
+        LocalDate checkoutDate
+    ) {
+        return roomTypeRepository.findStockBySchedule(
+            roomType,
+            checkinDate,
+            checkoutDate
+        );
     }
 }
