@@ -3,6 +3,8 @@ package com.example.miniproject.domain.accommodation.controller;
 import com.example.miniproject.domain.accommodation.dto.request.AccommodationRegisterRequest;
 import com.example.miniproject.domain.accommodation.dto.request.AccommodationSearchCondition;
 import com.example.miniproject.domain.accommodation.service.AccommodationService;
+import com.example.miniproject.domain.roomtype.dto.request.RoomTypeSearchCondition;
+import com.example.miniproject.domain.roomtype.service.RoomTypeService;
 import com.example.miniproject.global.utils.ApiUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AccommodationController {
 
     private final AccommodationService accommodationService;
+    private final RoomTypeService roomTypeService;
 
     @PostMapping
     public ResponseEntity<?> registerAccommodation(
@@ -57,6 +60,20 @@ public class AccommodationController {
             .body(
                 ApiUtils.success(
                     accommodationService.getAccommodation(id)
+                )
+            );
+    }
+
+    @GetMapping("/{id}/roomTypes")
+    public ResponseEntity<?> getRoomTypes(
+        @PathVariable("id") Long id,
+        @Valid RoomTypeSearchCondition condition
+    ) {
+        return ResponseEntity
+            .ok()
+            .body(
+                ApiUtils.success(
+                    roomTypeService.getRoomTypes(id, condition)
                 )
             );
     }
