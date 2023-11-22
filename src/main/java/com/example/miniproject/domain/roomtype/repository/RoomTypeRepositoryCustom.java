@@ -1,8 +1,12 @@
 package com.example.miniproject.domain.roomtype.repository;
 
-import com.example.miniproject.domain.roomtype.dto.request.RoomTypeSearchCondition;
 import com.example.miniproject.domain.roomtype.entity.RoomType;
+import java.time.LocalDate;
 
 public interface RoomTypeRepositoryCustom {
-    Long findStockBySearchCondition(RoomType roomType, RoomTypeSearchCondition condition);
+    Long findStockBySchedule(
+        RoomType roomType,
+        LocalDate checkinDate,
+        LocalDate checkoutDate
+    );
 }
