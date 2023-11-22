@@ -56,4 +56,43 @@ public class Room {
 
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<RoomImage> images = new ArrayList<>();
+
+    private Room(
+        Accommodation accommodation,
+        Integer price,
+        String name,
+        Integer capacity,
+        String introduction,
+        Integer stock,
+        LocalDate startDate,
+        LocalDate endDate
+    ) {
+        this.accommodation = accommodation;
+        accommodation.addRoom(this);
+        this.price = price;
+        this.name = name;
+        this.capacity = capacity;
+        this.introduction = introduction;
+        this.stock = stock;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
+    public static Room create(
+        Accommodation accommodation,
+        Integer price,
+        String name,
+        Integer capacity,
+        String introduction,
+        Integer stock,
+        LocalDate startDate,
+        LocalDate endDate
+    ) {
+        return new Room(accommodation, price, name, capacity, introduction, stock, startDate, endDate);
+    }
+
+    public void addImage(RoomImage image) {
+        images.add(image);
+        image.setRoom(this);
+    }
 }
