@@ -3,12 +3,13 @@ package com.example.miniproject.domain.accommodation.repository;
 import static com.example.miniproject.domain.accommodation.entity.QAccommodation.accommodation;
 import static com.example.miniproject.domain.order.entity.QOrderItem.*;
 import static com.example.miniproject.domain.room.entity.QRoom.room;
+import static com.example.miniproject.domain.roomtype.entity.QRoomType.roomType;
 import static com.example.miniproject.global.constant.SearchOrderCondition.PRICE_ASC;
 import static com.example.miniproject.global.constant.SearchOrderCondition.PRICE_DESC;
 
 import com.example.miniproject.domain.accommodation.dto.request.AccommodationSearchCondition;
 import com.example.miniproject.domain.accommodation.dto.response.AccommodationResponse;
-import com.example.miniproject.domain.order.entity.QOrderItem;
+import com.example.miniproject.domain.room.entity.QRoom;
 import com.example.miniproject.global.constant.AccommodationType;
 import com.example.miniproject.global.constant.Region;
 import com.example.miniproject.global.constant.SearchOrderCondition;
@@ -16,22 +17,34 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @RequiredArgsConstructor
 public class AccommodationRepositoryCustomImpl implements AccommodationRepositoryCustom {
 
+    private static final int DEFAULT_PAGE_OFFSET = 0;
+    private static final int DEFAULT_PAGE_SIZE = 8;
+    
     private final JPAQueryFactory query;
 
     @Override
-    public List<AccommodationResponse> findBySearchCondition(AccommodationSearchCondition condition) {
+    public Page<AccommodationResponse> findBySearchCondition(AccommodationSearchCondition condition) {
 
-        NumberExpression<Integer> minPrice = room.price.min();
+        NumberExpression<Integer> minPrice = roomType.price.min();
+        int offset = (condition.page() == null) ? DEFAULT_PAGE_OFFSET : condition.page() - 1;
+        int limit = (condition.size() == null) ? DEFAULT_PAGE_SIZE : condition.size();
+        Pageable pageable = PageRequest.of(offset, limit);
+        Long totalCount = getTotalCount(condition);
 
-        return query
+        List<AccommodationResponse> accommodations = query
             .select(
                 Projections.constructor(
                     AccommodationResponse.class,
@@ -42,23 +55,58 @@ public class AccommodationRepositoryCustomImpl implements AccommodationRepositor
                     accommodation.thumbnailUrl
                 )
             )
-            .from(room)
-            .join(room.accommodation, accommodation)
+            .from(accommodation)
+            .join(accommodation.roomTypes, roomType)
+            .join(roomType.rooms, room)
             .where(
-                hasStock(),
                 typeEqual(condition.type()),
                 regionEqual(condition.region()),
-                dateBefore(condition.checkinDate()),
-                dateAfter(condition.checkoutDate()),
-                capacityGreaterOrEqual(condition.capacity())
+                capacityGreaterOrEqual(condition.capacity()),
+                validRooms(condition.checkinDate(), condition.checkoutDate())
             )
-            .groupBy(accommodation)
+            .groupBy(accommodation.id)
             .orderBy(createOrderSpecifier(condition.order(), minPrice))
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
             .fetch();
+
+        return new PageImpl<>(accommodations, pageable, totalCount);
     }
 
-    private BooleanExpression hasStock() {
-        return room.stock.gt(1);
+    private Long getTotalCount(AccommodationSearchCondition condition) {
+        return query
+            .select(accommodation.count())
+            .from(accommodation)
+            .join(accommodation.roomTypes, roomType)
+            .join(roomType.rooms, room)
+            .where(
+                typeEqual(condition.type()),
+                regionEqual(condition.region()),
+                capacityGreaterOrEqual(condition.capacity()),
+                validRooms(condition.checkinDate(), condition.checkoutDate())
+            )
+            .fetchOne();
+    }
+
+    private BooleanExpression validRooms(LocalDate checkinDate, LocalDate checkoutDate) {
+        if (checkinDate == null || checkoutDate == null) {
+            return null;
+        }
+        QRoom subRoom = new QRoom("subRoom");
+        return room
+            .notIn(
+                JPAExpressions
+                    .selectFrom(subRoom)
+                    .join(orderItem).on(orderItem.room.eq(subRoom))
+                    .where(
+                        overlapped(checkinDate, checkoutDate)
+                    )
+            );
+    }
+
+    private BooleanExpression overlapped(LocalDate checkinDate, LocalDate checkoutDate) {
+        return orderItem.checkinDate.between(checkinDate, checkoutDate.minusDays(1)).and(
+            orderItem.checkoutDate.between(checkinDate.plusDays(1), checkoutDate));
     }
 
     private BooleanExpression typeEqual(AccommodationType type) {
@@ -69,16 +117,8 @@ public class AccommodationRepositoryCustomImpl implements AccommodationRepositor
         return (region == null) ? null : accommodation.region.eq(region);
     }
 
-    private BooleanExpression dateBefore(LocalDate date) {
-        return (date == null) ? null : room.startDate.loe(date);
-    }
-
-    private BooleanExpression dateAfter(LocalDate date) {
-        return (date == null) ? null : room.endDate.goe(date);
-    }
-
     private BooleanExpression capacityGreaterOrEqual(Integer capacity) {
-        return (capacity == null) ? null : room.capacity.goe(capacity);
+        return (capacity == null) ? null : roomType.capacity.goe(capacity);
     }
 
     private OrderSpecifier<?> createOrderSpecifier(
