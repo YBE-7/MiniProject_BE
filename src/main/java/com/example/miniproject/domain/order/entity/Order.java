@@ -1,6 +1,7 @@
 package com.example.miniproject.domain.order.entity;
 
 import com.example.miniproject.domain.member.entity.Member;
+import com.example.miniproject.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "order")
 @Entity
-public class Order {
+public class Order extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
