@@ -1,7 +1,7 @@
-package com.example.miniproject.domain.room.controller;
+package com.example.miniproject.domain.roomtype.controller;
 
-import com.example.miniproject.domain.room.dto.request.RoomRegisterRequest;
-import com.example.miniproject.domain.room.service.RoomService;
+import com.example.miniproject.domain.roomtype.dto.request.RoomTypeRegisterRequest;
+import com.example.miniproject.domain.roomtype.service.RoomTypeService;
 import com.example.miniproject.global.utils.ApiUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -13,21 +13,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/rooms")
+@RequestMapping("/api/roomtypes")
 @RequiredArgsConstructor
-public class RoomController {
+public class RoomTypeController {
 
-    private final RoomService roomService;
+    private final RoomTypeService roomTypeService;
 
     @PostMapping
     public ResponseEntity<?> registerRoomType(
-        @RequestBody @Valid RoomRegisterRequest request
+        @RequestBody @Valid RoomTypeRegisterRequest request
     ) {
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(
                 ApiUtils.success(
-                    roomService.register(request)
+                    roomTypeService.register(request)
                 )
             );
     }
