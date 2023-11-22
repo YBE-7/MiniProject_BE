@@ -29,6 +29,7 @@ public record AccommodationRegisterRequest(
     Double star,
 
     //추후 Multipart로 교체
+    @NotNull
     String thumbnailUrl,
 
     @NotBlank
