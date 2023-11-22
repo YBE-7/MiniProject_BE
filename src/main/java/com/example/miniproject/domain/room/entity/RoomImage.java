@@ -29,4 +29,20 @@ public class RoomImage {
 
     @Column(nullable = false)
     private String url;
+
+    private RoomImage(
+        String url
+    ) {
+        this.url = url;
+    }
+
+    public static RoomImage create(
+        String url
+    ) {
+        return new RoomImage(url);
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
+    }
 }
