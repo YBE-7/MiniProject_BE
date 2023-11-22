@@ -26,7 +26,7 @@ public class MemberServiceImpl implements MemberService {
         member.encodePassword(passwordEncoder);
 
         return new MemberSignUpResponse(
-            memberRepository.save(member).getId()
+            memberRepository.save(member)
         );
     }
 
