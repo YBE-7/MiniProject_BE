@@ -1,4 +1,4 @@
-package com.example.miniproject.domain.room.entity;
+package com.example.miniproject.domain.roomtype.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,34 +15,34 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "room_image")
+@Table(name = "room_type_image")
 @Entity
-public class RoomImage {
+public class RoomTypeImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "room_id", referencedColumnName = "id")
-    private Room room;
+    @JoinColumn(name = "room_type_id", referencedColumnName = "id")
+    private RoomType roomType;
 
     @Column(nullable = false)
     private String url;
 
-    private RoomImage(
+    private RoomTypeImage(
         String url
     ) {
         this.url = url;
     }
 
-    public static RoomImage create(
+    public static RoomTypeImage create(
         String url
     ) {
-        return new RoomImage(url);
+        return new RoomTypeImage(url);
     }
 
-    public void setRoom(Room room) {
-        this.room = room;
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
     }
 }
