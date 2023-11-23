@@ -24,6 +24,9 @@ public record RoomTypeRegisterRequest(
     @NotBlank
     String introduction,
 
+    @NotBlank
+    String service,
+
     //추후 List<Multipart>로 교체
     @NotNull
     List<String> images
@@ -36,7 +39,8 @@ public record RoomTypeRegisterRequest(
             name,
             price,
             capacity,
-            introduction
+            introduction,
+            service
         );
     }
 }
