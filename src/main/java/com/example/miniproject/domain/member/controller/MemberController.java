@@ -46,12 +46,27 @@ public class MemberController {
     }
 
     @GetMapping("/mypage")
-    public ResponseEntity<?> mypage(@AuthenticationPrincipal MemberDetails memberDetails) {
+    public ResponseEntity<?> getMyPage(
+        @AuthenticationPrincipal MemberDetails memberDetails
+    ) {
         return ResponseEntity
             .ok()
             .body(
                 ApiUtils.success(
-                    memberService.getMypage(memberDetails)
+                    memberService.getMyPage(memberDetails.getId())
+                )
+            );
+    }
+
+    @GetMapping("/orders")
+    public ResponseEntity<?> getOrders(
+        @AuthenticationPrincipal MemberDetails memberDetails
+    ) {
+        return ResponseEntity
+            .ok()
+            .body(
+                ApiUtils.success(
+                    memberService.getOrders(memberDetails.getId())
                 )
             );
     }

@@ -2,12 +2,12 @@ package com.example.miniproject.domain.member.dto.response;
 
 import com.example.miniproject.domain.member.entity.Member;
 
-public record MemberMypageResponse(
-    Long memberId,
-    String memberEmail,
-    String memberName
+public record MemberMyPageResponse(
+    Long id,
+    String email,
+    String name
 ) {
-    public MemberMypageResponse(Member member) {
+    public MemberMyPageResponse(Member member) {
         this(member.getId(), member.getEmail(), member.getName());
     }
 }

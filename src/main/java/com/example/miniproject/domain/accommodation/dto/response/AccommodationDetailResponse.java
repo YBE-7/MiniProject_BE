@@ -1,7 +1,6 @@
 package com.example.miniproject.domain.accommodation.dto.response;
 
 import com.example.miniproject.domain.accommodation.entity.Accommodation;
-import com.example.miniproject.domain.accommodation.entity.AccommodationImage;
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,7 +14,8 @@ public record AccommodationDetailResponse(
     List<String> images
 ) {
     public AccommodationDetailResponse(
-        Accommodation accommodation
+        Accommodation accommodation,
+        List<String> images
     ) {
         this(
             accommodation.getId(),
@@ -26,11 +26,7 @@ public record AccommodationDetailResponse(
             Arrays.stream(accommodation.getService()
                 .split(","))
                 .toList(),
-            accommodation.getImages()
-                .stream()
-                .map(AccommodationImage::getUrl)
-                .toList()
+            images
         );
-        images.add(0, accommodation.getThumbnailUrl());
     }
 }

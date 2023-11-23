@@ -1,80 +1,114 @@
 package com.example.miniproject.domain.cart.service;
 
-import com.example.miniproject.domain.cart.dto.request.CartItemRequest;
+import com.example.miniproject.domain.accommodation.entity.Accommodation;
+import com.example.miniproject.domain.cart.dto.request.CartItemRegisterRequest;
+import com.example.miniproject.domain.cart.dto.response.CartItemRegisterResponse;
 import com.example.miniproject.domain.cart.dto.response.CartItemResponse;
+import com.example.miniproject.domain.cart.dto.response.CartResponse;
 import com.example.miniproject.domain.cart.entity.CartItem;
 import com.example.miniproject.domain.cart.repository.CartRepository;
 import com.example.miniproject.domain.member.entity.Member;
 import com.example.miniproject.domain.member.repository.MemberRepository;
 import com.example.miniproject.domain.roomtype.entity.RoomType;
 import com.example.miniproject.domain.roomtype.repository.RoomTypeRepository;
+import com.example.miniproject.global.exception.AccessForbiddenException;
+import com.example.miniproject.global.exception.NoSuchEntityException;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class CartServiceImpl implements CartService{
 
     private final CartRepository cartRepository;
     private final MemberRepository memberRepository;
     private final RoomTypeRepository roomTypeRepository;
 
-    public List<CartItemResponse> showCartItems(Long memberId) {
+    @Override
+    @Transactional
+    public CartResponse getCartItems(Long memberId) {
         Member member = memberRepository.getReferenceById(memberId);
-
-        return cartRepository.findAllByMember(member).stream()
-            .map(CartItemResponse::new)
-            .collect(Collectors.toList());
+        List<CartItem> cartItems = cartRepository.findAllByMember(member);
+        int totalPrice = cartItems.stream()
+            .mapToInt(cartItem -> cartItem.getRoomType().getPrice())
+            .sum();
+        return new CartResponse(
+            getCartItemResponses(cartItems),
+            totalPrice
+        );
     }
 
+    @Override
     @Transactional
-    public Long addCartItem(Long memberId, CartItemRequest cartItemRequest) {
+    public CartItemRegisterResponse registerCartItem(
+        Long memberId,
+        CartItemRegisterRequest cartItemRegisterRequest
+    ) {
         Member member = memberRepository.getReferenceById(memberId);
-        RoomType roomType = roomTypeRepository.getReferenceById(cartItemRequest.roomTypeId());
+        RoomType roomType = roomTypeRepository.findById(cartItemRegisterRequest.roomTypeId())
+            .orElseThrow(NoSuchEntityException::new);
         Long roomTypeStock = roomTypeRepository.getStockBySchedule(
             roomType,
-            cartItemRequest.checkinDate(),
-            cartItemRequest.checkoutDate()
+            cartItemRegisterRequest.checkinDate(),
+            cartItemRegisterRequest.checkoutDate()
         );
-        Long roomTypeStockInCart = cartRepository.countByMemberAndRoomType(member, roomType);
+        Long roomTypeStockInCart = cartRepository.countByMemberAndRoomTypeAndCheckinDateAndCheckoutDate(
+            member,
+            roomType,
+            cartItemRegisterRequest.checkinDate(),
+            cartItemRegisterRequest.checkoutDate()
+        );
 
-        if(roomTypeStock - roomTypeStockInCart == 0) {
+        if (roomTypeStock <= roomTypeStockInCart) {
             throw new RuntimeException(); // Todo 예외처리
         }
 
-        CartItem newCartItem = CartItem.create(
-            memberRepository.getReferenceById(memberId),
-            roomTypeRepository.getReferenceById(cartItemRequest.roomTypeId()),
-            cartItemRequest.checkinDate(),
-            cartItemRequest.checkoutDate());
+        CartItem cartItem = cartRepository.save(
+            CartItem.create(
+                member,
+                roomType,
+                cartItemRegisterRequest.checkinDate(),
+                cartItemRegisterRequest.checkoutDate()
+            )
+        );
 
-        cartRepository.save(newCartItem);
-
-        return newCartItem.getId();
+        return new CartItemRegisterResponse(cartItem);
     }
 
+    @Override
     @Transactional
-    public Long deleteCartItem(Long memberId, Long cartItemId) {
+    public void deleteCartItem(Long memberId, Long cartItemId) {
         Member member = memberRepository.getReferenceById(memberId);
-
-        cartRepository.deleteByMemberAndId(member, cartItemId);
-
-        return cartItemId;
+        CartItem cartItem = cartRepository.findById(cartItemId)
+            .orElseThrow(NoSuchEntityException::new);
+        if (!Objects.equals(member, cartItem.getMember())) {
+            throw new AccessForbiddenException();
+        }
+        cartRepository.deleteById(cartItemId);
     }
 
+    @Override
     @Transactional
-    public Long deleteAllCartItem(Long memberId) {
+    public void deleteAllCartItems(Long memberId) {
         Member member = memberRepository.getReferenceById(memberId);
-
         cartRepository.deleteAllByMember(member);
+    }
 
-        return memberId;
+    private List<CartItemResponse> getCartItemResponses(List<CartItem> cartItems) {
+        return cartItems.stream()
+            .map(cartItem -> {
+                RoomType roomType = cartItem.getRoomType();
+                Accommodation accommodation = roomType.getAccommodation();
+                return new CartItemResponse(
+                    cartItem,
+                    roomType,
+                    accommodation
+                );
+            })
+            .toList();
     }
 }

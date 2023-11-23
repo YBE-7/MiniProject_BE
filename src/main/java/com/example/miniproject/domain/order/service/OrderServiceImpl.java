@@ -56,7 +56,7 @@ public class OrderServiceImpl implements OrderService {
 
         if (orderItems.size() == orderRequest.orderItems().size()) {
             orderRepository.save(order);
-            cartService.deleteAllCartItem(memberId);
+            cartService.deleteAllCartItems(memberId);
             success = true;
         }
 
