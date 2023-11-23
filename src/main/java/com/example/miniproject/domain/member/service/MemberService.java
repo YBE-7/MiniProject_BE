@@ -1,12 +1,12 @@
 package com.example.miniproject.domain.member.service;
 
-
 import com.example.miniproject.domain.member.dto.request.MemberLoginRequest;
 import com.example.miniproject.domain.member.dto.request.MemberSignUpRequest;
 import com.example.miniproject.domain.member.dto.response.MemberLoginResponse;
-import com.example.miniproject.domain.member.dto.response.MemberMypageResponse;
+import com.example.miniproject.domain.member.dto.response.MemberMyPageResponse;
 import com.example.miniproject.domain.member.dto.response.MemberSignUpResponse;
-import com.example.miniproject.global.security.MemberDetails;
+import com.example.miniproject.domain.member.dto.response.OrderResponse;
+import java.util.List;
 
 public interface MemberService {
 
@@ -14,5 +14,7 @@ public interface MemberService {
 
     MemberLoginResponse login(MemberLoginRequest request);
 
-    MemberMypageResponse getMypage(MemberDetails memberDetails);
+    MemberMyPageResponse getMyPage(Long id);
+
+    List<OrderResponse> getOrders(Long id);
 }

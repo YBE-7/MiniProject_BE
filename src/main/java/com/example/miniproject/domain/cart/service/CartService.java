@@ -1,17 +1,16 @@
 package com.example.miniproject.domain.cart.service;
 
-import com.example.miniproject.domain.cart.dto.request.CartItemRequest;
-import com.example.miniproject.domain.cart.dto.response.CartItemResponse;
-
-import java.util.List;
+import com.example.miniproject.domain.cart.dto.request.CartItemRegisterRequest;
+import com.example.miniproject.domain.cart.dto.response.CartItemRegisterResponse;
+import com.example.miniproject.domain.cart.dto.response.CartResponse;
 
 public interface CartService {
 
-    List<CartItemResponse> showCartItems(Long memberId);
+    CartResponse getCartItems(Long memberId);
 
-    Long addCartItem(Long memberId, CartItemRequest cartItemRequest);
+    CartItemRegisterResponse registerCartItem(Long memberId, CartItemRegisterRequest cartItemRegisterRequest);
 
-    Long deleteCartItem(Long memberId, Long cartItemId);
+    void deleteCartItem(Long memberId, Long cartItemId);
 
-    Long deleteAllCartItem(Long memberId);
+    void deleteAllCartItems(Long memberId);
 }
