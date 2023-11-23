@@ -57,4 +57,17 @@ public class MemberController {
                 )
             );
     }
+
+    @GetMapping("/orders")
+    public ResponseEntity<?> getOrders(
+        @AuthenticationPrincipal MemberDetails memberDetails
+    ) {
+        return ResponseEntity
+            .ok()
+            .body(
+                ApiUtils.success(
+                    memberService.getOrders(memberDetails.getId())
+                )
+            );
+    }
 }
