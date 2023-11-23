@@ -5,6 +5,7 @@ import com.example.miniproject.domain.accommodation.repository.AccommodationRepo
 import com.example.miniproject.domain.room.entity.Room;
 import com.example.miniproject.domain.roomtype.dto.request.RoomTypeRegisterRequest;
 import com.example.miniproject.domain.roomtype.dto.request.RoomTypeSearchCondition;
+import com.example.miniproject.domain.roomtype.dto.response.RoomTypeDetailResponse;
 import com.example.miniproject.domain.roomtype.dto.response.RoomTypeRegisterResponse;
 import com.example.miniproject.domain.roomtype.dto.response.RoomTypeResponse;
 import com.example.miniproject.domain.roomtype.entity.RoomType;
@@ -57,6 +58,14 @@ public class RoomTypeServiceImpl implements RoomTypeService {
                 return new RoomTypeResponse(roomType, stock);
             })
             .toList();
+    }
+
+    @Override
+    @Transactional
+    public RoomTypeDetailResponse getRoomType(Long id) {
+        RoomType roomType = roomTypeRepository.findById(id)
+            .orElseThrow(NoSuchEntityException::new);
+        return new RoomTypeDetailResponse(roomType);
     }
 
     @Override
