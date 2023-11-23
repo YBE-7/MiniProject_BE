@@ -3,7 +3,7 @@ package com.example.miniproject.domain.member.service;
 import com.example.miniproject.domain.member.dto.request.MemberLoginRequest;
 import com.example.miniproject.domain.member.dto.request.MemberSignUpRequest;
 import com.example.miniproject.domain.member.dto.response.MemberLoginResponse;
-import com.example.miniproject.domain.member.dto.response.MemberMypageResponse;
+import com.example.miniproject.domain.member.dto.response.MemberMyPageResponse;
 import com.example.miniproject.domain.member.dto.response.MemberSignUpResponse;
 import com.example.miniproject.domain.member.entity.Member;
 import com.example.miniproject.domain.member.repository.MemberRepository;
@@ -52,11 +52,10 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberMypageResponse getMypage(MemberDetails memberDetails) {
-        Long memberId = memberDetails.getId();
-        Member nowMember = memberRepository.getReferenceById(memberId);
-        return new MemberMypageResponse(nowMember);
-
+    @Transactional
+    public MemberMyPageResponse getMyPage(Long id) {
+        Member member = memberRepository.getReferenceById(id);
+        return new MemberMyPageResponse(member);
     }
 
     private void validateDuplicateEmail(String email) {
