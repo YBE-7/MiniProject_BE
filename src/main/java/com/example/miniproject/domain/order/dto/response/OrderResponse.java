@@ -13,6 +13,7 @@ public class OrderResponse {
 
     public record OrderDetail(
         @NotNull Integer totalPrice,
+        @NotNull Integer totalCount,
         @NotNull List<RoomInfo> roomInfos,
         @NotNull MemberInfo memberInfo,
         @NotNull String paymentMethod,
@@ -28,7 +29,7 @@ public class OrderResponse {
                 roomList.add(roomInfo);
             }
 
-            return new OrderDetail(order.getTotalPrice(), roomList, memberInfo, order.getPaymentMethod(), success);
+            return new OrderDetail(order.getTotalPrice(), roomList.size(), roomList, memberInfo, order.getPaymentMethod(), success);
         }
     }
 
