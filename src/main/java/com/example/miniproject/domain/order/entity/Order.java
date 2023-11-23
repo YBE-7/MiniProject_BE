@@ -40,38 +40,43 @@ public class Order extends BaseTimeEntity {
     @Column(nullable = false)
     private String subscriberPhoneNumber;
 
+    @Column(nullable = false)
+    private String paymentMethod;
+
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private final List<OrderItem> orderItems = new ArrayList<>();
 
     private Order(
         Member member,
-        Integer totalPrice,
         String clientName,
         String clientPhoneNumber,
         String subscriberName,
-        String subscriberPhoneNumber
+        String subscriberPhoneNumber,
+        String paymentMethod
     ) {
         this.member = member;
-        this.totalPrice = totalPrice;
+        this.totalPrice = 0;
         this.clientName = clientName;
         this.clientPhoneNumber = clientPhoneNumber;
         this.subscriberName = subscriberName;
         this.subscriberPhoneNumber = subscriberPhoneNumber;
+        this.paymentMethod = paymentMethod;
     }
 
     public static Order create(
-            Member member,
-            Integer totalPrice,
-            String clientName,
-            String clientPhoneNumber,
-            String subscriberName,
-            String subscriberPhoneNumber
+        Member member,
+        String clientName,
+        String clientPhoneNumber,
+        String subscriberName,
+        String subscriberPhoneNumber,
+        String paymentMethod
     ) {
-        return new Order(member, totalPrice, clientName, clientPhoneNumber, subscriberName, subscriberPhoneNumber);
+        return new Order(member, clientName, clientPhoneNumber, subscriberName, subscriberPhoneNumber, paymentMethod);
     }
 
     public void addOrderItem(OrderItem orderItem) {
         orderItems.add(orderItem);
+        this.totalPrice += orderItem.getRoom().getRoomType().getPrice();
         orderItem.setOrder(this);
     }
 }
