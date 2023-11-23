@@ -6,15 +6,22 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
-public record OrderItemRequest(
-    @NotNull Long roomTypeId,
-    @NotNull LocalDate checkinDate,
-    @NotNull LocalDate checkoutDate) {
-    public OrderItem toOrderItem(Room room) {
+public record OrderItemRegisterRequest(
+    @NotNull
+    Long roomTypeId,
+
+    @NotNull
+    LocalDate checkinDate,
+
+    @NotNull
+    LocalDate checkoutDate
+) {
+    public OrderItem toEntity(Room room, String code) {
         return OrderItem.create(
             room,
             this.checkinDate,
-            this.checkoutDate
+            this.checkoutDate,
+            code
         );
     }
 }

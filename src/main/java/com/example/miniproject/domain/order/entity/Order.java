@@ -43,6 +43,9 @@ public class Order extends BaseTimeEntity {
     @Column(nullable = false)
     private String paymentMethod;
 
+    @Column(nullable = false)
+    private String code;
+
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private final List<OrderItem> orderItems = new ArrayList<>();
 
@@ -52,7 +55,8 @@ public class Order extends BaseTimeEntity {
         String clientPhoneNumber,
         String subscriberName,
         String subscriberPhoneNumber,
-        String paymentMethod
+        String paymentMethod,
+        String code
     ) {
         this.member = member;
         this.totalPrice = 0;
@@ -61,6 +65,7 @@ public class Order extends BaseTimeEntity {
         this.subscriberName = subscriberName;
         this.subscriberPhoneNumber = subscriberPhoneNumber;
         this.paymentMethod = paymentMethod;
+        this.code = code;
     }
 
     public static Order create(
@@ -69,9 +74,18 @@ public class Order extends BaseTimeEntity {
         String clientPhoneNumber,
         String subscriberName,
         String subscriberPhoneNumber,
-        String paymentMethod
+        String paymentMethod,
+        String code
     ) {
-        return new Order(member, clientName, clientPhoneNumber, subscriberName, subscriberPhoneNumber, paymentMethod);
+        return new Order(
+            member,
+            clientName,
+            clientPhoneNumber,
+            subscriberName,
+            subscriberPhoneNumber,
+            paymentMethod,
+            code
+        );
     }
 
     public void addOrderItem(OrderItem orderItem) {

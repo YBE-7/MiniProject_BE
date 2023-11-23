@@ -1,4 +1,4 @@
-package com.example.miniproject.domain.member.dto.response;
+package com.example.miniproject.domain.order.dto.response;
 
 import com.example.miniproject.domain.accommodation.entity.Accommodation;
 import com.example.miniproject.domain.order.entity.OrderItem;
@@ -7,13 +7,12 @@ import java.time.LocalDate;
 
 public record OrderItemResponse(
     String code,
-    String accommodationImage,
     String accommodationName,
+    String accommodationImage,
     String roomTypeName,
     LocalDate checkinDate,
     LocalDate checkoutDate,
-    Integer capacity,
-    Boolean isUsed
+    Integer capacity
 ) {
     public OrderItemResponse(
         OrderItem orderItem,
@@ -22,13 +21,12 @@ public record OrderItemResponse(
     ) {
         this(
             orderItem.getCode(),
-            accommodation.getThumbnailUrl(),
             accommodation.getName(),
+            accommodation.getThumbnailUrl(),
             roomType.getName(),
             orderItem.getCheckinDate(),
             orderItem.getCheckoutDate(),
-            roomType.getCapacity(),
-            LocalDate.now().isAfter(orderItem.getCheckoutDate())
+            roomType.getCapacity()
         );
     }
 }

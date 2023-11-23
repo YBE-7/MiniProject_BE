@@ -15,12 +15,14 @@ public record CartItemResponse(
     Integer price,
     Integer capacity,
     LocalDate checkinDate,
-    LocalDate checkoutDate
+    LocalDate checkoutDate,
+    Long stock
 ) {
     public CartItemResponse(
         CartItem cartItem,
         RoomType roomType,
-        Accommodation accommodation
+        Accommodation accommodation,
+        Long stock
     ) {
         this(
             cartItem.getId(),
@@ -31,7 +33,8 @@ public record CartItemResponse(
             roomType.getPrice(),
             roomType.getCapacity(),
             cartItem.getCheckinDate(),
-            cartItem.getCheckoutDate()
+            cartItem.getCheckoutDate(),
+            stock
         );
     }
 }
