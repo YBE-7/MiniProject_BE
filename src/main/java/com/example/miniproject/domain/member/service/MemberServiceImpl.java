@@ -1,15 +1,22 @@
 package com.example.miniproject.domain.member.service;
 
+import com.example.miniproject.domain.accommodation.entity.Accommodation;
 import com.example.miniproject.domain.member.dto.request.MemberLoginRequest;
 import com.example.miniproject.domain.member.dto.request.MemberSignUpRequest;
 import com.example.miniproject.domain.member.dto.response.MemberLoginResponse;
 import com.example.miniproject.domain.member.dto.response.MemberMyPageResponse;
 import com.example.miniproject.domain.member.dto.response.MemberSignUpResponse;
+import com.example.miniproject.domain.member.dto.response.OrderItemResponse;
+import com.example.miniproject.domain.member.dto.response.OrderResponse;
 import com.example.miniproject.domain.member.entity.Member;
 import com.example.miniproject.domain.member.repository.MemberRepository;
+import com.example.miniproject.domain.order.entity.Order;
+import com.example.miniproject.domain.order.repository.OrderRepository;
+import com.example.miniproject.domain.roomtype.entity.RoomType;
 import com.example.miniproject.global.exception.DuplicateEmailException;
 import com.example.miniproject.global.security.JwtService;
 import com.example.miniproject.global.security.MemberDetails;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
+    private final OrderRepository orderRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationProvider authenticationProvider;
     private final JwtService jwtService;
@@ -56,6 +64,33 @@ public class MemberServiceImpl implements MemberService {
     public MemberMyPageResponse getMyPage(Long id) {
         Member member = memberRepository.getReferenceById(id);
         return new MemberMyPageResponse(member);
+    }
+
+    @Override
+    public List<OrderResponse> getOrders(Long id) {
+        Member member = memberRepository.getReferenceById(id);
+        List<Order> orders = orderRepository.findByMemberOrderByIdDesc(member);
+        return orders.stream()
+            .map(order -> new OrderResponse(
+                order.getCreatedAt().toLocalDate(),
+                getOrderItems(order)
+            ))
+            .toList();
+    }
+
+    private List<OrderItemResponse> getOrderItems(Order order) {
+        return order.getOrderItems()
+            .stream()
+            .map(orderItem -> {
+                RoomType roomType = orderItem.getRoom().getRoomType();
+                Accommodation accommodation = roomType.getAccommodation();
+                return new OrderItemResponse(
+                    orderItem,
+                    roomType,
+                    accommodation
+                );
+            })
+            .toList();
     }
 
     private void validateDuplicateEmail(String email) {
