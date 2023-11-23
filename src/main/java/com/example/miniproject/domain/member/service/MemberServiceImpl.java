@@ -3,6 +3,7 @@ package com.example.miniproject.domain.member.service;
 import com.example.miniproject.domain.member.dto.request.MemberLoginRequest;
 import com.example.miniproject.domain.member.dto.request.MemberSignUpRequest;
 import com.example.miniproject.domain.member.dto.response.MemberLoginResponse;
+import com.example.miniproject.domain.member.dto.response.MemberMypageResponse;
 import com.example.miniproject.domain.member.dto.response.MemberSignUpResponse;
 import com.example.miniproject.domain.member.entity.Member;
 import com.example.miniproject.domain.member.repository.MemberRepository;
@@ -48,6 +49,14 @@ public class MemberServiceImpl implements MemberService {
         MemberDetails memberDetails = (MemberDetails) authentication.getPrincipal();
         Member member = memberRepository.getReferenceById(memberDetails.getId());
         return new MemberLoginResponse(jwtService.issue(member.getId(), member.getEmail(), member.getRole()));
+    }
+
+    @Override
+    public MemberMypageResponse getMypage(MemberDetails memberDetails) {
+        Long memberId = memberDetails.getId();
+        Member nowMember = memberRepository.getReferenceById(memberId);
+        return new MemberMypageResponse(nowMember);
+
     }
 
     private void validateDuplicateEmail(String email) {

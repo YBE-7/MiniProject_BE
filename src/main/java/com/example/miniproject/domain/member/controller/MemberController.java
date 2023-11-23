@@ -3,15 +3,14 @@ package com.example.miniproject.domain.member.controller;
 import com.example.miniproject.domain.member.dto.request.MemberLoginRequest;
 import com.example.miniproject.domain.member.dto.request.MemberSignUpRequest;
 import com.example.miniproject.domain.member.service.MemberService;
+import com.example.miniproject.global.security.MemberDetails;
 import com.example.miniproject.global.utils.ApiUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/members")
@@ -42,6 +41,17 @@ public class MemberController {
             .body(
                 ApiUtils.success(
                     memberService.login(request)
+                )
+            );
+    }
+
+    @GetMapping("/mypage")
+    public ResponseEntity<?> mypage(@AuthenticationPrincipal MemberDetails memberDetails) {
+        return ResponseEntity
+            .ok()
+            .body(
+                ApiUtils.success(
+                    memberService.getMypage(memberDetails)
                 )
             );
     }
