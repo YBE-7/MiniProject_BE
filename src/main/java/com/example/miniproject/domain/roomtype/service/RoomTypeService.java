@@ -18,12 +18,6 @@ public interface RoomTypeService {
 
     RoomTypeDetailResponse getRoomType(Long id);
 
-    Long getStock(
-        RoomType roomType,
-        LocalDate checkinDate,
-        LocalDate checkoutDate
-    );
-
     Optional<Room> findAvailableRoom(
         RoomType roomType,
         LocalDate checkinDate,

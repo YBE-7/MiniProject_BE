@@ -50,7 +50,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             .findByAccommodationAndCapacityGreaterThanEqual(accommodation, condition.capacity())
             .stream()
             .map(roomType -> {
-                Long stock = getStock(
+                Long stock = roomTypeRepository.getStockBySchedule(
                     roomType,
                     condition.checkinDate(),
                     condition.checkoutDate()
@@ -66,20 +66,6 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         RoomType roomType = roomTypeRepository.findById(id)
             .orElseThrow(NoSuchEntityException::new);
         return new RoomTypeDetailResponse(roomType);
-    }
-
-    @Override
-    @Transactional
-    public Long getStock(
-        RoomType roomType,
-        LocalDate checkinDate,
-        LocalDate checkoutDate
-    ) {
-        return roomTypeRepository.findStockBySchedule(
-            roomType,
-            checkinDate,
-            checkoutDate
-        );
     }
 
     @Override
