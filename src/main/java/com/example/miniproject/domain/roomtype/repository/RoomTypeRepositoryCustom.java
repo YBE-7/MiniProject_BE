@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface RoomTypeRepositoryCustom {
-    Long findStockBySchedule(
+    Long getStockBySchedule(
         RoomType roomType,
         LocalDate checkinDate,
         LocalDate checkoutDate

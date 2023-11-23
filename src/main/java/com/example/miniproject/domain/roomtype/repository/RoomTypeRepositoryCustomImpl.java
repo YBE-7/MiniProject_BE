@@ -19,7 +19,7 @@ public class RoomTypeRepositoryCustomImpl implements RoomTypeRepositoryCustom {
     private final JPAQueryFactory query;
 
     @Override
-    public Long findStockBySchedule(
+    public Long getStockBySchedule(
         RoomType roomType,
         LocalDate checkinDate,
         LocalDate checkoutDate
