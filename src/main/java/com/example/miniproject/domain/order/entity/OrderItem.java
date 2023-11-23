@@ -31,22 +31,28 @@ public class OrderItem {
     @Column(nullable = false)
     private LocalDate checkoutDate;
 
+    @Column(nullable = false)
+    private String code;
+
     private OrderItem(
         Room room,
         LocalDate checkinDate,
-        LocalDate checkoutDate
+        LocalDate checkoutDate,
+        String code
     ) {
         this.room = room;
         this.checkinDate = checkinDate;
         this.checkoutDate = checkoutDate;
+        this.code = code;
     }
 
     public static OrderItem create(
         Room room,
         LocalDate checkinDate,
-        LocalDate checkoutDate
+        LocalDate checkoutDate,
+        String code
     ) {
-        return new OrderItem(room, checkinDate, checkoutDate);
+        return new OrderItem(room, checkinDate, checkoutDate, code);
     }
 
     public void setOrder(Order order) {

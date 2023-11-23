@@ -63,7 +63,7 @@ public class RoomTypeRepositoryCustomImpl implements RoomTypeRepositoryCustom {
     }
 
     private BooleanExpression overlapped(LocalDate checkinDate, LocalDate checkoutDate) {
-        return orderItem.checkinDate.between(checkinDate, checkoutDate.minusDays(1)).and(
+        return orderItem.checkinDate.between(checkinDate, checkoutDate.minusDays(1)).or(
             orderItem.checkoutDate.between(checkinDate.plusDays(1), checkoutDate));
     }
 }

@@ -6,6 +6,7 @@ import com.example.miniproject.domain.roomtype.entity.RoomType;
 import java.time.LocalDate;
 
 public record OrderItemResponse(
+    String code,
     String accommodationImage,
     String accommodationName,
     String roomTypeName,
@@ -20,6 +21,7 @@ public record OrderItemResponse(
         Accommodation accommodation
     ) {
         this(
+            orderItem.getCode(),
             accommodation.getThumbnailUrl(),
             accommodation.getName(),
             roomType.getName(),

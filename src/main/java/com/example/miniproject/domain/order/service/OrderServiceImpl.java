@@ -1,10 +1,11 @@
 package com.example.miniproject.domain.order.service;
 
-import com.example.miniproject.domain.cart.service.CartService;
+import com.example.miniproject.domain.cart.repository.CartRepository;
 import com.example.miniproject.domain.member.entity.Member;
 import com.example.miniproject.domain.member.repository.MemberRepository;
-import com.example.miniproject.domain.order.dto.request.OrderItemRequest;
-import com.example.miniproject.domain.order.dto.request.OrderRequest;
+import com.example.miniproject.domain.order.dto.request.OrderItemRegisterRequest;
+import com.example.miniproject.domain.order.dto.request.OrderRegisterRequest;
+import com.example.miniproject.domain.order.dto.response.OrderRegisterResponse;
 import com.example.miniproject.domain.order.dto.response.OrderResponse;
 import com.example.miniproject.domain.order.entity.Order;
 import com.example.miniproject.domain.order.entity.OrderItem;
@@ -13,12 +14,13 @@ import com.example.miniproject.domain.room.entity.Room;
 import com.example.miniproject.domain.roomtype.entity.RoomType;
 import com.example.miniproject.domain.roomtype.repository.RoomTypeRepository;
 import com.example.miniproject.domain.roomtype.service.RoomTypeService;
+import com.example.miniproject.global.exception.AccessForbiddenException;
+import com.example.miniproject.global.exception.NoSuchEntityException;
+import com.example.miniproject.global.utils.CodeGenerator;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -28,39 +30,45 @@ public class OrderServiceImpl implements OrderService {
     private final RoomTypeRepository roomTypeRepository;
     private final MemberRepository memberRepository;
     private final RoomTypeService roomTypeService;
-    private final CartService cartService;
+    private final CartRepository cartRepository;
 
     @Override
     @Transactional
-    public OrderResponse.OrderDetail order(Long memberId, OrderRequest orderRequest) {
-        Member member = memberRepository.findById(memberId).orElseThrow();
-        Order order = orderRequest.toOrder(member);
-        List<OrderItem> orderItems = new ArrayList<>();
-        boolean success = false;
+    public OrderRegisterResponse order(Long memberId, OrderRegisterRequest request) {
+        Member member = memberRepository.getReferenceById(memberId);
+        Order order = request.toEntity(member, CodeGenerator.generate());
+        request.orderItems()
+            .forEach(orderItemRegisterRequest -> {
+                Room room = findAvailableRoom(orderItemRegisterRequest);
+                OrderItem orderItem = orderItemRegisterRequest.toEntity(
+                    room,
+                    CodeGenerator.generate()
+                );
+                order.addOrderItem(orderItem);
+            });
+        cartRepository.deleteAllByMember(member);
+        return new OrderRegisterResponse(orderRepository.save(order));
+    }
 
-        for (OrderItemRequest orderItemRequest : orderRequest.orderItems()) {
-            RoomType roomType = roomTypeRepository.findById(orderItemRequest.roomTypeId())
-                .orElseThrow();
-
-            Room room = roomTypeService.findAvailableRoom(
-                roomType,
-                orderItemRequest.checkinDate(),
-                orderItemRequest.checkoutDate()
-            ).orElseThrow();
-
-
-            OrderItem orderItem = orderItemRequest.toOrderItem(room);
-            order.addOrderItem(orderItem);
-            orderItems.add(orderItem);
+    @Override
+    @Transactional
+    public OrderResponse getOrder(Long memberId, Long orderId) {
+        Member member = memberRepository.getReferenceById(memberId);
+        Order order = orderRepository.findById(orderId)
+            .orElseThrow(NoSuchEntityException::new);
+        if (!Objects.equals(member, order.getMember())) {
+            throw new AccessForbiddenException();
         }
+        return new OrderResponse(order);
+    }
 
-        if (orderItems.size() == orderRequest.orderItems().size()) {
-            orderRepository.save(order);
-            cartService.deleteAllCartItems(memberId);
-            success = true;
-        }
-
-        return OrderResponse.OrderDetail.fromEntity(order, orderItems, success);
-
+    private Room findAvailableRoom(OrderItemRegisterRequest request) {
+        RoomType roomType = roomTypeRepository.findById(request.roomTypeId())
+            .orElseThrow(NoSuchEntityException::new);
+        return roomTypeService.findAvailableRoom(
+            roomType,
+            request.checkinDate(),
+            request.checkoutDate()
+        ).orElseThrow(RuntimeException::new);
     }
 }

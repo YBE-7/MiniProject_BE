@@ -42,7 +42,7 @@ public class AccommodationRepositoryCustomImpl implements AccommodationRepositor
         int offset = (condition.page() == null) ? DEFAULT_PAGE_OFFSET : condition.page() - 1;
         int limit = (condition.size() == null) ? DEFAULT_PAGE_SIZE : condition.size();
         Pageable pageable = PageRequest.of(offset, limit);
-        Long totalCount = getTotalCount(condition);
+        int totalCount = getTotalCount(condition);
 
         List<AccommodationResponse> accommodations = query
             .select(
@@ -73,9 +73,9 @@ public class AccommodationRepositoryCustomImpl implements AccommodationRepositor
         return new PageImpl<>(accommodations, pageable, totalCount);
     }
 
-    private Long getTotalCount(AccommodationSearchCondition condition) {
+    private int getTotalCount(AccommodationSearchCondition condition) {
         return query
-            .select(accommodation.count())
+            .select(accommodation)
             .from(accommodation)
             .join(accommodation.roomTypes, roomType)
             .join(roomType.rooms, room)
@@ -85,7 +85,9 @@ public class AccommodationRepositoryCustomImpl implements AccommodationRepositor
                 capacityGreaterOrEqual(condition.capacity()),
                 validRooms(condition.checkinDate(), condition.checkoutDate())
             )
-            .fetchOne();
+            .groupBy(accommodation.id)
+            .fetch()
+            .size();
     }
 
     private BooleanExpression validRooms(LocalDate checkinDate, LocalDate checkoutDate) {
@@ -105,7 +107,7 @@ public class AccommodationRepositoryCustomImpl implements AccommodationRepositor
     }
 
     private BooleanExpression overlapped(LocalDate checkinDate, LocalDate checkoutDate) {
-        return orderItem.checkinDate.between(checkinDate, checkoutDate.minusDays(1)).and(
+        return orderItem.checkinDate.between(checkinDate, checkoutDate.minusDays(1)).or(
             orderItem.checkoutDate.between(checkinDate.plusDays(1), checkoutDate));
     }
 

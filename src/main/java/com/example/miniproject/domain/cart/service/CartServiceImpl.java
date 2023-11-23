@@ -103,10 +103,16 @@ public class CartServiceImpl implements CartService{
             .map(cartItem -> {
                 RoomType roomType = cartItem.getRoomType();
                 Accommodation accommodation = roomType.getAccommodation();
+                Long stock = roomTypeRepository.getStockBySchedule(
+                    roomType,
+                    cartItem.getCheckinDate(),
+                    cartItem.getCheckoutDate()
+                );
                 return new CartItemResponse(
                     cartItem,
                     roomType,
-                    accommodation
+                    accommodation,
+                    stock
                 );
             })
             .toList();
