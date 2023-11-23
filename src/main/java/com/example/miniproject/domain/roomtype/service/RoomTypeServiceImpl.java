@@ -2,6 +2,7 @@ package com.example.miniproject.domain.roomtype.service;
 
 import com.example.miniproject.domain.accommodation.entity.Accommodation;
 import com.example.miniproject.domain.accommodation.repository.AccommodationRepository;
+import com.example.miniproject.domain.room.entity.Room;
 import com.example.miniproject.domain.roomtype.dto.request.RoomTypeRegisterRequest;
 import com.example.miniproject.domain.roomtype.dto.request.RoomTypeSearchCondition;
 import com.example.miniproject.domain.roomtype.dto.response.RoomTypeRegisterResponse;
@@ -12,6 +13,7 @@ import com.example.miniproject.domain.roomtype.repository.RoomTypeRepository;
 import com.example.miniproject.global.exception.NoSuchEntityException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,5 +71,22 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             checkinDate,
             checkoutDate
         );
+    }
+
+    @Override
+    @Transactional
+    public Optional<Room> findAvailableRoom(
+        RoomType roomType,
+        LocalDate checkinDate,
+        LocalDate checkoutDate
+    ) {
+        return roomTypeRepository
+            .findAvailableRooms(
+                roomType,
+                checkinDate,
+                checkoutDate
+            )
+            .stream()
+            .findAny();
     }
 }
