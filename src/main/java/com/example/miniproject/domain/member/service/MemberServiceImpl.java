@@ -67,18 +67,19 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Transactional
     public List<OrderResponse> getOrders(Long id) {
         Member member = memberRepository.getReferenceById(id);
         List<Order> orders = orderRepository.findByMemberOrderByIdDesc(member);
         return orders.stream()
             .map(order -> new OrderResponse(
                 order.getCreatedAt().toLocalDate(),
-                getOrderItems(order)
+                getOrderItemResponses(order)
             ))
             .toList();
     }
 
-    private List<OrderItemResponse> getOrderItems(Order order) {
+    private List<OrderItemResponse> getOrderItemResponses(Order order) {
         return order.getOrderItems()
             .stream()
             .map(orderItem -> {

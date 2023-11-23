@@ -9,6 +9,8 @@ import com.example.miniproject.domain.accommodation.entity.Accommodation;
 import com.example.miniproject.domain.accommodation.entity.AccommodationImage;
 import com.example.miniproject.domain.accommodation.repository.AccommodationRepository;
 import com.example.miniproject.global.exception.NoSuchEntityException;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +43,11 @@ public class AccommodationServiceImpl implements AccommodationService {
     public AccommodationDetailResponse getAccommodation(Long id) {
         Accommodation accommodation = accommodationRepository.findById(id)
             .orElseThrow(NoSuchEntityException::new);
-        return new AccommodationDetailResponse(accommodation);
+        List<String> images = new ArrayList<>();
+        images.add(accommodation.getThumbnailUrl());
+        for (AccommodationImage image : accommodation.getImages()) {
+            images.add(image.getUrl());
+        }
+        return new AccommodationDetailResponse(accommodation, images);
     }
 }
