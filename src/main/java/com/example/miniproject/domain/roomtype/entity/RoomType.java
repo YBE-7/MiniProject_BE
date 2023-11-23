@@ -45,6 +45,9 @@ public class RoomType {
     @Column(nullable = false)
     private String introduction;
 
+    @Column(nullable = false)
+    private String service;
+
     @OneToMany(mappedBy = "roomType", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private final List<Room> rooms = new ArrayList<>();
 
@@ -56,7 +59,8 @@ public class RoomType {
         String name,
         Integer price,
         Integer capacity,
-        String introduction
+        String introduction,
+        String service
     ) {
         this.accommodation = accommodation;
         accommodation.addRoomType(this);
@@ -64,6 +68,7 @@ public class RoomType {
         this.price = price;
         this.capacity = capacity;
         this.introduction = introduction;
+        this.service = service;
     }
 
     public static RoomType create(
@@ -71,9 +76,10 @@ public class RoomType {
         String name,
         Integer price,
         Integer capacity,
-        String introduction
+        String introduction,
+        String service
     ) {
-        return new RoomType(accommodation, name, price, capacity, introduction);
+        return new RoomType(accommodation, name, price, capacity, introduction, service);
     }
 
     public void addImage(RoomTypeImage image) {

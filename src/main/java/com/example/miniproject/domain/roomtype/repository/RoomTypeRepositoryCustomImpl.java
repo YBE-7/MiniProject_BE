@@ -4,11 +4,13 @@ import static com.example.miniproject.domain.order.entity.QOrderItem.orderItem;
 import static com.example.miniproject.domain.room.entity.QRoom.room;
 
 import com.example.miniproject.domain.room.entity.QRoom;
+import com.example.miniproject.domain.room.entity.Room;
 import com.example.miniproject.domain.roomtype.entity.RoomType;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDate;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -30,6 +32,21 @@ public class RoomTypeRepositoryCustomImpl implements RoomTypeRepositoryCustom {
                 validRooms(checkinDate, checkoutDate)
             )
             .fetchOne();
+    }
+
+    @Override
+    public List<Room> findAvailableRooms(
+        RoomType roomType,
+        LocalDate checkinDate,
+        LocalDate checkoutDate
+    ) {
+        return query
+            .selectFrom(room)
+            .where(
+                room.roomType.eq(roomType),
+                validRooms(checkinDate, checkoutDate)
+            )
+            .fetch();
     }
 
     private BooleanExpression validRooms(LocalDate checkinDate, LocalDate checkoutDate) {
