@@ -3,6 +3,7 @@ package com.example.miniproject.domain.roomtype.service;
 import com.example.miniproject.domain.room.entity.Room;
 import com.example.miniproject.domain.roomtype.dto.request.RoomTypeRegisterRequest;
 import com.example.miniproject.domain.roomtype.dto.request.RoomTypeSearchCondition;
+import com.example.miniproject.domain.roomtype.dto.response.RoomTypeDetailResponse;
 import com.example.miniproject.domain.roomtype.dto.response.RoomTypeRegisterResponse;
 import com.example.miniproject.domain.roomtype.dto.response.RoomTypeResponse;
 import com.example.miniproject.domain.roomtype.entity.RoomType;
@@ -14,6 +15,8 @@ public interface RoomTypeService {
     RoomTypeRegisterResponse register(RoomTypeRegisterRequest request);
 
     List<RoomTypeResponse> getRoomTypes(Long accommodationId, RoomTypeSearchCondition condition);
+
+    RoomTypeDetailResponse getRoomType(Long id);
 
     Long getStock(
         RoomType roomType,
