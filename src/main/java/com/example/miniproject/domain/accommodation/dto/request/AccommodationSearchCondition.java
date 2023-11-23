@@ -8,8 +8,8 @@ import java.time.LocalDate;
 public record AccommodationSearchCondition(
     AccommodationType type,
     Region region,
-    LocalDate checkinDate,
-    LocalDate checkoutDate,
+    LocalDate from,
+    LocalDate to,
     Integer capacity,
     SearchOrderCondition order,
     Integer page,
