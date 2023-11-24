@@ -73,6 +73,7 @@ public class MemberServiceImpl implements MemberService {
         List<Order> orders = orderRepository.findByMemberOrderByIdDesc(member);
         return orders.stream()
             .map(order -> new OrderResponse(
+                order.getId(),
                 order.getCreatedAt().toLocalDate(),
                 getOrderItemResponses(order)
             ))

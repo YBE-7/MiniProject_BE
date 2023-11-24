@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record OrderResponse(
+    Long id,
     LocalDateTime orderTime,
     SubscriberResponse subscriber,
     ClientResponse client,
@@ -16,6 +17,7 @@ public record OrderResponse(
 ) {
     public OrderResponse(Order order) {
         this(
+            order.getId(),
             order.getCreatedAt(),
             new SubscriberResponse(order),
             new ClientResponse(order),

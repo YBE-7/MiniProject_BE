@@ -62,7 +62,7 @@ public class AccommodationRepositoryCustomImpl implements AccommodationRepositor
                 typeEqual(condition.type()),
                 regionEqual(condition.region()),
                 capacityGreaterOrEqual(condition.capacity()),
-                validRooms(condition.checkinDate(), condition.checkoutDate())
+                validRooms(condition.from(), condition.to())
             )
             .groupBy(accommodation.id)
             .orderBy(createOrderSpecifier(condition.order(), minPrice))
@@ -83,15 +83,15 @@ public class AccommodationRepositoryCustomImpl implements AccommodationRepositor
                 typeEqual(condition.type()),
                 regionEqual(condition.region()),
                 capacityGreaterOrEqual(condition.capacity()),
-                validRooms(condition.checkinDate(), condition.checkoutDate())
+                validRooms(condition.from(), condition.to())
             )
             .groupBy(accommodation.id)
             .fetch()
             .size();
     }
 
-    private BooleanExpression validRooms(LocalDate checkinDate, LocalDate checkoutDate) {
-        if (checkinDate == null || checkoutDate == null) {
+    private BooleanExpression validRooms(LocalDate from, LocalDate to) {
+        if (from == null || to == null) {
             return null;
         }
         QRoom subRoom = new QRoom("subRoom");
@@ -101,14 +101,14 @@ public class AccommodationRepositoryCustomImpl implements AccommodationRepositor
                     .selectFrom(subRoom)
                     .join(orderItem).on(orderItem.room.eq(subRoom))
                     .where(
-                        overlapped(checkinDate, checkoutDate)
+                        overlapped(from, to)
                     )
             );
     }
 
-    private BooleanExpression overlapped(LocalDate checkinDate, LocalDate checkoutDate) {
-        return orderItem.checkinDate.between(checkinDate, checkoutDate.minusDays(1)).or(
-            orderItem.checkoutDate.between(checkinDate.plusDays(1), checkoutDate));
+    private BooleanExpression overlapped(LocalDate from, LocalDate to) {
+        return orderItem.checkinDate.between(from, to.minusDays(1)).or(
+            orderItem.checkoutDate.between(from.plusDays(1), to));
     }
 
     private BooleanExpression typeEqual(AccommodationType type) {

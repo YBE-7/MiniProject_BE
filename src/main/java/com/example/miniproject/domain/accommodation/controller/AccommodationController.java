@@ -64,7 +64,7 @@ public class AccommodationController {
             );
     }
 
-    @GetMapping("/{id}/roomTypes")
+    @GetMapping("/{id}/roomtypes")
     public ResponseEntity<?> getRoomTypes(
         @PathVariable("id") Long id,
         @Valid RoomTypeSearchCondition condition
