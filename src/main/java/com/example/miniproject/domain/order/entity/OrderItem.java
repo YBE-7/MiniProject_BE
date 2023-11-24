@@ -1,6 +1,6 @@
 package com.example.miniproject.domain.order.entity;
 
-import com.example.miniproject.domain.room.entity.Room;
+import com.example.miniproject.domain.roomtype.entity.Room;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import lombok.AccessLevel;

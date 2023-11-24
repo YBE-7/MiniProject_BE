@@ -1,7 +1,7 @@
 package com.example.miniproject.domain.accommodation.controller;
 
-import com.example.miniproject.domain.accommodation.dto.request.AccommodationRegisterRequest;
 import com.example.miniproject.domain.accommodation.dto.request.AccommodationSearchCondition;
+import com.example.miniproject.domain.accommodation.dto.request.AccommodationsRegisterRequest;
 import com.example.miniproject.domain.accommodation.service.AccommodationService;
 import com.example.miniproject.domain.roomtype.dto.request.RoomTypeSearchCondition;
 import com.example.miniproject.domain.roomtype.service.RoomTypeService;
@@ -26,8 +26,8 @@ public class AccommodationController {
     private final RoomTypeService roomTypeService;
 
     @PostMapping
-    public ResponseEntity<?> registerAccommodation(
-        @RequestBody @Valid AccommodationRegisterRequest request
+    public ResponseEntity<?> registerAccommodations(
+        @RequestBody @Valid AccommodationsRegisterRequest request
     ) {
         return ResponseEntity
             .status(HttpStatus.CREATED)

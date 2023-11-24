@@ -2,7 +2,7 @@ package com.example.miniproject.domain.order.dto.request;
 
 import com.example.miniproject.domain.order.entity.Order;
 import com.example.miniproject.domain.order.entity.OrderItem;
-import com.example.miniproject.domain.room.entity.Room;
+import com.example.miniproject.domain.roomtype.entity.Room;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;

@@ -1,6 +1,6 @@
 package com.example.miniproject.domain.roomtype.controller;
 
-import com.example.miniproject.domain.roomtype.dto.request.RoomTypeRegisterRequest;
+import com.example.miniproject.domain.roomtype.dto.request.RoomTypesRegisterRequest;
 import com.example.miniproject.domain.roomtype.service.RoomTypeService;
 import com.example.miniproject.global.utils.ApiUtils;
 import jakarta.validation.Valid;
@@ -22,8 +22,8 @@ public class RoomTypeController {
     private final RoomTypeService roomTypeService;
 
     @PostMapping
-    public ResponseEntity<?> registerRoomType(
-        @RequestBody @Valid RoomTypeRegisterRequest request
+    public ResponseEntity<?> registerRoomTypes(
+        @RequestBody @Valid RoomTypesRegisterRequest request
     ) {
         return ResponseEntity
             .status(HttpStatus.CREATED)

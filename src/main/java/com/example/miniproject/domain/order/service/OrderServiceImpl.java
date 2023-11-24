@@ -11,7 +11,7 @@ import com.example.miniproject.domain.order.entity.Order;
 import com.example.miniproject.domain.order.entity.OrderItem;
 import com.example.miniproject.domain.order.repository.OrderItemRepository;
 import com.example.miniproject.domain.order.repository.OrderRepository;
-import com.example.miniproject.domain.room.entity.Room;
+import com.example.miniproject.domain.roomtype.entity.Room;
 import com.example.miniproject.domain.roomtype.entity.RoomType;
 import com.example.miniproject.domain.roomtype.repository.RoomTypeRepository;
 import com.example.miniproject.domain.roomtype.service.RoomTypeService;
