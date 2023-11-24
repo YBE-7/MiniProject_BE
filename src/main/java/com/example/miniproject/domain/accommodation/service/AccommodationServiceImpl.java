@@ -11,6 +11,7 @@ import com.example.miniproject.domain.accommodation.entity.Accommodation;
 import com.example.miniproject.domain.accommodation.entity.AccommodationImage;
 import com.example.miniproject.domain.accommodation.repository.AccommodationRepository;
 import com.example.miniproject.global.exception.NoSuchEntityException;
+import com.example.miniproject.global.utils.ScheduleValidator;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,7 @@ public class AccommodationServiceImpl implements AccommodationService {
     @Override
     @Transactional
     public AccommodationPageResponse search(AccommodationSearchCondition condition) {
+        ScheduleValidator.validate(condition.from(), condition.to());
         return new AccommodationPageResponse(
             accommodationRepository.findBySearchCondition(condition)
         );
@@ -58,7 +60,9 @@ public class AccommodationServiceImpl implements AccommodationService {
     private AccommodationRegisterResponse register(AccommodationRegisterRequest request) {
         Accommodation accommodation = request.toEntity();
         request.images()
-            .forEach(image -> accommodation.addImage(AccommodationImage.create(image)));
+            .forEach(
+                image -> accommodation.addImage(AccommodationImage.create(image))
+            );
         return new AccommodationRegisterResponse(accommodationRepository.save(accommodation));
     }
 }

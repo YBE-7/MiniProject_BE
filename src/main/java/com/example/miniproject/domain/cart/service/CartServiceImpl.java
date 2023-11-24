@@ -13,6 +13,7 @@ import com.example.miniproject.domain.roomtype.entity.RoomType;
 import com.example.miniproject.domain.roomtype.repository.RoomTypeRepository;
 import com.example.miniproject.global.exception.AccessForbiddenException;
 import com.example.miniproject.global.exception.NoSuchEntityException;
+import com.example.miniproject.global.utils.ScheduleValidator;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -46,33 +47,22 @@ public class CartServiceImpl implements CartService{
     @Transactional
     public CartItemRegisterResponse registerCartItem(
         Long memberId,
-        CartItemRegisterRequest cartItemRegisterRequest
+        CartItemRegisterRequest request
     ) {
-        Member member = memberRepository.getReferenceById(memberId);
-        RoomType roomType = roomTypeRepository.findById(cartItemRegisterRequest.roomTypeId())
-            .orElseThrow(NoSuchEntityException::new);
-        Long roomTypeStock = roomTypeRepository.getStockBySchedule(
-            roomType,
-            cartItemRegisterRequest.checkinDate(),
-            cartItemRegisterRequest.checkoutDate()
-        );
-        Long roomTypeStockInCart = cartRepository.countByMemberAndRoomTypeAndCheckinDateAndCheckoutDate(
-            member,
-            roomType,
-            cartItemRegisterRequest.checkinDate(),
-            cartItemRegisterRequest.checkoutDate()
-        );
+        ScheduleValidator.validate(request.checkinDate(), request.checkoutDate());
 
-        if (roomTypeStock <= roomTypeStockInCart) {
-            throw new RuntimeException(); // Todo 예외처리
-        }
+        Member member = memberRepository.getReferenceById(memberId);
+        RoomType roomType = roomTypeRepository.findById(request.roomTypeId())
+            .orElseThrow(NoSuchEntityException::new);
+
+        validateCartItemRegisterRequest(request, member, roomType);
 
         CartItem cartItem = cartRepository.save(
             CartItem.create(
                 member,
                 roomType,
-                cartItemRegisterRequest.checkinDate(),
-                cartItemRegisterRequest.checkoutDate()
+                request.checkinDate(),
+                request.checkoutDate()
             )
         );
 
@@ -100,21 +90,45 @@ public class CartServiceImpl implements CartService{
 
     private List<CartItemResponse> getCartItemResponses(List<CartItem> cartItems) {
         return cartItems.stream()
-            .map(cartItem -> {
-                RoomType roomType = cartItem.getRoomType();
-                Accommodation accommodation = roomType.getAccommodation();
-                Long stock = roomTypeRepository.getStockBySchedule(
-                    roomType,
-                    cartItem.getCheckinDate(),
-                    cartItem.getCheckoutDate()
-                );
-                return new CartItemResponse(
-                    cartItem,
-                    roomType,
-                    accommodation,
-                    stock
-                );
-            })
+            .map(this::getCartItemResponse)
             .toList();
+    }
+
+    private CartItemResponse getCartItemResponse(CartItem cartItem) {
+        RoomType roomType = cartItem.getRoomType();
+        Accommodation accommodation = roomType.getAccommodation();
+        Long stock = roomTypeRepository.getStockBySchedule(
+            roomType,
+            cartItem.getCheckinDate(),
+            cartItem.getCheckoutDate()
+        );
+        return new CartItemResponse(
+            cartItem,
+            roomType,
+            accommodation,
+            stock
+        );
+    }
+
+    private void validateCartItemRegisterRequest(
+        CartItemRegisterRequest request,
+        Member member,
+        RoomType roomType
+    ) {
+        Long roomTypeStock = roomTypeRepository.getStockBySchedule(
+            roomType,
+            request.checkinDate(),
+            request.checkoutDate()
+        );
+        Long roomTypeStockInCart = cartRepository.countByMemberAndRoomTypeAndCheckinDateAndCheckoutDate(
+            member,
+            roomType,
+            request.checkinDate(),
+            request.checkoutDate()
+        );
+
+        if (roomTypeStock <= roomTypeStockInCart) {
+            throw new RuntimeException(); // Todo 예외처리
+        }
     }
 }
