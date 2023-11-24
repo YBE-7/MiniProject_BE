@@ -8,12 +8,8 @@ import java.time.LocalDate;
 
 public record CartItemResponse(
     Long id,
-    String accommodationName,
-    String accommodationAddress,
-    String accommodationImage,
-    String roomTypeName,
-    Integer price,
-    Integer capacity,
+    AccommodationResponse accommodation,
+    RoomTypeResponse roomType,
     LocalDate checkinDate,
     LocalDate checkoutDate,
     Long stock
@@ -26,12 +22,8 @@ public record CartItemResponse(
     ) {
         this(
             cartItem.getId(),
-            accommodation.getName(),
-            accommodation.getLocation().getAddress(),
-            accommodation.getThumbnailUrl(),
-            roomType.getName(),
-            roomType.getPrice(),
-            roomType.getCapacity(),
+            new AccommodationResponse(accommodation),
+            new RoomTypeResponse(roomType),
             cartItem.getCheckinDate(),
             cartItem.getCheckoutDate(),
             stock
