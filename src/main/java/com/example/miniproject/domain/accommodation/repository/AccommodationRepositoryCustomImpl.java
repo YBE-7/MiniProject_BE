@@ -36,11 +36,13 @@ public class AccommodationRepositoryCustomImpl implements AccommodationRepositor
     private final JPAQueryFactory query;
 
     @Override
-    public Page<AccommodationResponse> findBySearchCondition(AccommodationSearchCondition condition) {
+    public Page<AccommodationResponse> findBySearchCondition(
+        AccommodationSearchCondition condition
+    ) {
 
         NumberExpression<Integer> minPrice = roomType.price.min();
-        int offset = (condition.page() == null) ? DEFAULT_PAGE_OFFSET : condition.page() - 1;
-        int limit = (condition.size() == null) ? DEFAULT_PAGE_SIZE : condition.size();
+        int offset = getOffset(condition.page());
+        int limit = getLimit(condition.size());
         Pageable pageable = PageRequest.of(offset, limit);
         int totalCount = getTotalCount(condition);
 
@@ -134,5 +136,19 @@ public class AccommodationRepositoryCustomImpl implements AccommodationRepositor
             return minPrice.desc();
         }
         return accommodation.star.desc();
+    }
+
+    private int getOffset(Integer page) {
+        if (page == null || page <= 0) {
+            return DEFAULT_PAGE_OFFSET;
+        }
+        return page - 1;
+    }
+
+    private int getLimit(Integer size) {
+        if (size == null || size <= 0) {
+            return DEFAULT_PAGE_SIZE;
+        }
+        return size;
     }
 }
