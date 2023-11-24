@@ -3,6 +3,7 @@ package com.example.miniproject.global.exception.handler;
 import com.example.miniproject.global.constant.ErrorCode;
 import com.example.miniproject.global.exception.AccessForbiddenException;
 import com.example.miniproject.global.exception.DuplicateEmailException;
+import com.example.miniproject.global.exception.InvalidParamException;
 import com.example.miniproject.global.exception.NoSuchEntityException;
 import com.example.miniproject.global.utils.ApiUtils;
 import java.util.Locale;
@@ -29,7 +30,8 @@ public class GlobalControllerAdvice {
 
     @ExceptionHandler({
         NoSuchEntityException.class,
-        DuplicateEmailException.class
+        DuplicateEmailException.class,
+        InvalidParamException.class
     })
     public ResponseEntity<?> handleCustomException(
         RuntimeException ex

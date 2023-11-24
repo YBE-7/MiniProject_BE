@@ -15,6 +15,7 @@ import com.example.miniproject.domain.roomtype.entity.RoomTypeImage;
 import com.example.miniproject.domain.roomtype.repository.RoomTypeRepository;
 import com.example.miniproject.global.exception.NoSuchEntityException;
 import com.example.miniproject.global.utils.RandomNumberGenerator;
+import com.example.miniproject.global.utils.ScheduleValidator;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -46,6 +47,8 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         Long accommodationId,
         RoomTypeSearchCondition condition
     ) {
+        ScheduleValidator.validate(condition.from(), condition.to());
+
         Accommodation accommodation = accommodationRepository.findById(accommodationId)
             .orElseThrow(NoSuchEntityException::new);
 
@@ -89,7 +92,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         request.images()
             .forEach(image -> roomType.addImage(RoomTypeImage.create(image)));
 
-        int randomNumber = RandomNumberGenerator.generate(1, 5);
+        int randomNumber = RandomNumberGenerator.generateNumberInRangeInclusive(1, 5);
         for (int index = 0; index < randomNumber; index++) {
             Room room = Room.create(roomType.getName() + index);
             roomType.addRoom(room);

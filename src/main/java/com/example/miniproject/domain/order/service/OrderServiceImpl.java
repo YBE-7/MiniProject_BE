@@ -19,6 +19,7 @@ import com.example.miniproject.domain.roomtype.service.RoomTypeService;
 import com.example.miniproject.global.exception.AccessForbiddenException;
 import com.example.miniproject.global.exception.NoSuchEntityException;
 import com.example.miniproject.global.utils.CodeGenerator;
+import com.example.miniproject.global.utils.ScheduleValidator;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -45,10 +46,13 @@ public class OrderServiceImpl implements OrderService {
         );
         request.orderItems()
             .forEach(orderItemRegisterRequest -> {
-                    registerOrderItem(order, orderItemRegisterRequest);
-                    deleteOneCartItem(member, orderItemRegisterRequest);
-                }
-            );
+                ScheduleValidator.validate(
+                    orderItemRegisterRequest.checkinDate(),
+                    orderItemRegisterRequest.checkoutDate()
+                );
+                registerOrderItem(order, orderItemRegisterRequest);
+                deleteOneCartItem(member, orderItemRegisterRequest);
+            });
         return new OrderRegisterResponse(order);
     }
 
