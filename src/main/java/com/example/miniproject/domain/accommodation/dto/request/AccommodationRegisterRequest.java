@@ -28,7 +28,6 @@ public record AccommodationRegisterRequest(
     @NotNull
     Double star,
 
-    //추후 Multipart로 교체
     @NotNull
     String thumbnailUrl,
 
@@ -41,7 +40,6 @@ public record AccommodationRegisterRequest(
     @NotNull
     Double longitude,
 
-    //추후 List<Multipart>로 교체
     @NotNull
     List<String> images
 ) {

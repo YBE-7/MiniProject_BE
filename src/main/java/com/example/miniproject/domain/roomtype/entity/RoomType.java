@@ -41,7 +41,6 @@ public class RoomType {
     @Column(nullable = false)
     private Integer capacity;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
     private String introduction;
 
     @Column(nullable = false)

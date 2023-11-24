@@ -21,13 +21,11 @@ public record RoomTypeRegisterRequest(
     @Min(1)
     Integer capacity,
 
-    @NotBlank
     String introduction,
 
     @NotBlank
     String service,
 
-    //추후 List<Multipart>로 교체
     @NotNull
     List<String> images
 ) {

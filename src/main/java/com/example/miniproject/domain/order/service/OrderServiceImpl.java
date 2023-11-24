@@ -1,5 +1,6 @@
 package com.example.miniproject.domain.order.service;
 
+import com.example.miniproject.domain.cart.entity.CartItem;
 import com.example.miniproject.domain.cart.repository.CartRepository;
 import com.example.miniproject.domain.member.entity.Member;
 import com.example.miniproject.domain.member.repository.MemberRepository;
@@ -18,6 +19,7 @@ import com.example.miniproject.domain.roomtype.service.RoomTypeService;
 import com.example.miniproject.global.exception.AccessForbiddenException;
 import com.example.miniproject.global.exception.NoSuchEntityException;
 import com.example.miniproject.global.utils.CodeGenerator;
+import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -42,10 +44,11 @@ public class OrderServiceImpl implements OrderService {
             request.toEntity(member, CodeGenerator.generate())
         );
         request.orderItems()
-            .forEach(orderItemRegisterRequest ->
-                registerOrderItem(order, orderItemRegisterRequest)
+            .forEach(orderItemRegisterRequest -> {
+                    registerOrderItem(order, orderItemRegisterRequest);
+                    deleteOneCartItem(member, orderItemRegisterRequest);
+                }
             );
-        cartRepository.deleteAllByMember(member);
         return new OrderRegisterResponse(order);
     }
 
@@ -81,5 +84,17 @@ public class OrderServiceImpl implements OrderService {
             request.checkinDate(),
             request.checkoutDate()
         ).orElseThrow(RuntimeException::new);
+    }
+
+    private void deleteOneCartItem(Member member, OrderItemRegisterRequest request) {
+        List<CartItem> cartItems = cartRepository.findByMemberAndRoomTypeIdAndCheckinDateAndCheckoutDate(
+            member,
+            request.roomTypeId(),
+            request.checkinDate(),
+            request.checkoutDate()
+        );
+        if (!cartItems.isEmpty()) {
+            cartRepository.deleteById(cartItems.get(0).getId());
+        }
     }
 }

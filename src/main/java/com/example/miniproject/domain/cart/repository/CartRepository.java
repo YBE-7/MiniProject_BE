@@ -12,6 +12,13 @@ import java.util.List;
 @Repository
 public interface CartRepository extends JpaRepository<CartItem, Long> {
 
+    List<CartItem> findByMemberAndRoomTypeIdAndCheckinDateAndCheckoutDate(
+        Member member,
+        Long roomTypeId,
+        LocalDate checkinDate,
+        LocalDate checkoutDate
+    );
+
     Long countByMemberAndRoomTypeAndCheckinDateAndCheckoutDate(
         Member member,
         RoomType roomType,

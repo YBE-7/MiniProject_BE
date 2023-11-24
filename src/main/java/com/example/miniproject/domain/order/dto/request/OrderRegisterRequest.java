@@ -4,14 +4,14 @@ import com.example.miniproject.domain.member.entity.Member;
 import com.example.miniproject.domain.order.entity.Order;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotEmpty;
 
 import java.util.List;
 
 public record OrderRegisterRequest(
-    @NotNull
-    @Valid
-    List<OrderItemRegisterRequest> orderItems,
+
+    @NotEmpty
+    List<@Valid OrderItemRegisterRequest> orderItems,
 
     @NotBlank
     String clientName,
