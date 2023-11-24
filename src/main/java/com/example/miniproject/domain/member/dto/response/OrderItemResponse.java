@@ -8,12 +8,10 @@ import java.time.LocalDate;
 public record OrderItemResponse(
     Long id,
     String code,
-    String accommodationImage,
-    String accommodationName,
-    String roomTypeName,
+    AccommodationResponse accommodation,
+    RoomTypeResponse roomType,
     LocalDate checkinDate,
     LocalDate checkoutDate,
-    Integer capacity,
     Boolean isUsed
 ) {
     public OrderItemResponse(
@@ -24,12 +22,10 @@ public record OrderItemResponse(
         this(
             orderItem.getId(),
             orderItem.getCode(),
-            accommodation.getThumbnailUrl(),
-            accommodation.getName(),
-            roomType.getName(),
+            new AccommodationResponse(accommodation),
+            new RoomTypeResponse(roomType),
             orderItem.getCheckinDate(),
             orderItem.getCheckoutDate(),
-            roomType.getCapacity(),
             LocalDate.now().isAfter(orderItem.getCheckoutDate())
         );
     }
