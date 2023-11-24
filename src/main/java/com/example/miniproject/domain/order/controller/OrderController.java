@@ -24,7 +24,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<?> order(
+    public ResponseEntity<?> registerOrder(
         @AuthenticationPrincipal MemberDetails memberDetails,
         @RequestBody @Valid OrderRegisterRequest orderRegisterRequest
     ) {
@@ -32,7 +32,7 @@ public class OrderController {
             .status(HttpStatus.CREATED)
             .body(
                 ApiUtils.success(
-                    orderService.order(memberDetails.getId(), orderRegisterRequest)
+                    orderService.registerOrder(memberDetails.getId(), orderRegisterRequest)
                 )
             );
     }

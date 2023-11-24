@@ -1,5 +1,6 @@
 package com.example.miniproject.domain.order.dto.request;
 
+import com.example.miniproject.domain.order.entity.Order;
 import com.example.miniproject.domain.order.entity.OrderItem;
 import com.example.miniproject.domain.room.entity.Room;
 import jakarta.validation.constraints.NotNull;
@@ -16,8 +17,9 @@ public record OrderItemRegisterRequest(
     @NotNull
     LocalDate checkoutDate
 ) {
-    public OrderItem toEntity(Room room, String code) {
+    public OrderItem toEntity(Order order, Room room, String code) {
         return OrderItem.create(
+            order,
             room,
             this.checkinDate,
             this.checkoutDate,

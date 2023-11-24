@@ -7,10 +7,10 @@ import java.time.LocalDate;
 public record RoomTypeSearchCondition(
 
     @NotNull
-    LocalDate checkinDate,
+    LocalDate from,
 
     @NotNull
-    LocalDate checkoutDate,
+    LocalDate to,
 
     @NotNull
     @Min(1)

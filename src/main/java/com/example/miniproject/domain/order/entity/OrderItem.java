@@ -35,11 +35,13 @@ public class OrderItem {
     private String code;
 
     private OrderItem(
+        Order order,
         Room room,
         LocalDate checkinDate,
         LocalDate checkoutDate,
         String code
     ) {
+        this.order = order;
         this.room = room;
         this.checkinDate = checkinDate;
         this.checkoutDate = checkoutDate;
@@ -47,12 +49,13 @@ public class OrderItem {
     }
 
     public static OrderItem create(
+        Order order,
         Room room,
         LocalDate checkinDate,
         LocalDate checkoutDate,
         String code
     ) {
-        return new OrderItem(room, checkinDate, checkoutDate, code);
+        return new OrderItem(order, room, checkinDate, checkoutDate, code);
     }
 
     public void setOrder(Order order) {

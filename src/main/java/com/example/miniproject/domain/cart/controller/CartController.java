@@ -21,9 +21,9 @@ public class CartController {
     @GetMapping
     public ResponseEntity<?> getCartItems(
         @AuthenticationPrincipal MemberDetails memberDetails
-        ) {
+    ) {
         return ResponseEntity
-            .status(HttpStatus.OK)
+            .ok()
             .body(
                 ApiUtils.success(
                     cartService.getCartItems(memberDetails.getId())
@@ -37,7 +37,7 @@ public class CartController {
         @RequestBody @Valid CartItemRegisterRequest request
     ) {
         return ResponseEntity
-            .status(HttpStatus.OK)
+            .status(HttpStatus.CREATED)
             .body(
                 ApiUtils.success(
                     cartService.registerCartItem(memberDetails.getId(), request)

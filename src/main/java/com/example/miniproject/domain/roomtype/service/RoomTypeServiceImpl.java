@@ -52,8 +52,8 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             .map(roomType -> {
                 Long stock = roomTypeRepository.getStockBySchedule(
                     roomType,
-                    condition.checkinDate(),
-                    condition.checkoutDate()
+                    condition.from(),
+                    condition.to()
                 );
                 return new RoomTypeResponse(roomType, stock);
             })
