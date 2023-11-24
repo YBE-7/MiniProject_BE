@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 
 public record AccommodationPageResponse(
-    List<AccommodationResponse> results,
+    List<AccommodationResponse> accommodations,
     long totalElements,
     int totalPages
 ) {
