@@ -4,6 +4,7 @@ import com.example.miniproject.global.constant.ErrorCode;
 import com.example.miniproject.global.exception.AccessForbiddenException;
 import com.example.miniproject.global.exception.DuplicateEmailException;
 import com.example.miniproject.global.exception.InvalidParamException;
+import com.example.miniproject.global.exception.NoStockException;
 import com.example.miniproject.global.exception.NoSuchEntityException;
 import com.example.miniproject.global.utils.ApiUtils;
 import java.util.Locale;
@@ -31,7 +32,8 @@ public class GlobalControllerAdvice {
     @ExceptionHandler({
         NoSuchEntityException.class,
         DuplicateEmailException.class,
-        InvalidParamException.class
+        InvalidParamException.class,
+        NoStockException.class
     })
     public ResponseEntity<?> handleCustomException(
         RuntimeException ex
@@ -142,16 +144,16 @@ public class GlobalControllerAdvice {
             );
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleException(
-        Exception ex
-    ) {
-        log.error("handling {}, message : {}", ex.getClass().toString(), ex.getMessage());
-
-        return ResponseEntity
-            .internalServerError()
-            .body(
-                ApiUtils.error(ErrorCode.INTERNAL_SERVER_ERROR.getMessage())
-            );
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<?> handleException(
+//        Exception ex
+//    ) {
+//        log.error("handling {}, message : {}", ex.getClass().toString(), ex.getMessage());
+//
+//        return ResponseEntity
+//            .internalServerError()
+//            .body(
+//                ApiUtils.error(ErrorCode.INTERNAL_SERVER_ERROR.getMessage())
+//            );
+//    }
 }

@@ -1,5 +1,7 @@
 package com.example.miniproject.domain.roomtype.service;
 
+import static com.example.miniproject.global.constant.RoomTypeStatus.*;
+
 import com.example.miniproject.domain.accommodation.entity.Accommodation;
 import com.example.miniproject.domain.accommodation.repository.AccommodationRepository;
 import com.example.miniproject.domain.roomtype.entity.Room;
@@ -13,6 +15,7 @@ import com.example.miniproject.domain.roomtype.dto.response.RoomTypesRegisterRes
 import com.example.miniproject.domain.roomtype.entity.RoomType;
 import com.example.miniproject.domain.roomtype.entity.RoomTypeImage;
 import com.example.miniproject.domain.roomtype.repository.RoomTypeRepository;
+import com.example.miniproject.global.constant.RoomTypeStatus;
 import com.example.miniproject.global.exception.NoSuchEntityException;
 import com.example.miniproject.global.utils.RandomNumberGenerator;
 import com.example.miniproject.global.utils.ScheduleValidator;
@@ -52,10 +55,22 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         Accommodation accommodation = accommodationRepository.findById(accommodationId)
             .orElseThrow(NoSuchEntityException::new);
 
-        return roomTypeRepository.findBySearchCondition(
-            accommodation,
-            condition
-        );
+        return roomTypeRepository.findByAccommodation(accommodation)
+            .stream()
+            .map(roomType -> {
+                Long stock = roomTypeRepository.getStockBySchedule(
+                    roomType, condition.from(), condition.to()
+                );
+                RoomTypeStatus status = getRoomTypeStatus(roomType, stock, condition.capacity());
+                return new RoomTypeResponse(roomType, stock, status);
+            })
+            .sorted((r1, r2) -> {
+                if (r1.status() == r2.status()) {
+                    return Integer.compare(r1.price(), r2.price());
+                }
+                return Integer.compare(r2.status().getValue(), r1.status().getValue());
+            })
+            .toList();
     }
 
     @Override
@@ -99,5 +114,16 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         }
 
         return new RoomTypeRegisterResponse(roomType);
+    }
+
+    private RoomTypeStatus getRoomTypeStatus(
+        RoomType roomType,
+        Long stock,
+        Integer capacity
+    ) {
+        if (stock == 0) {
+            return NO_STOCK;
+        }
+        return (roomType.getCapacity() >= capacity) ? OK : OVER_CAPACITY;
     }
 }
