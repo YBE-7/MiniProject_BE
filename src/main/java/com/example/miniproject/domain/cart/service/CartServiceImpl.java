@@ -12,6 +12,7 @@ import com.example.miniproject.domain.member.repository.MemberRepository;
 import com.example.miniproject.domain.roomtype.entity.RoomType;
 import com.example.miniproject.domain.roomtype.repository.RoomTypeRepository;
 import com.example.miniproject.global.exception.AccessForbiddenException;
+import com.example.miniproject.global.exception.NoStockException;
 import com.example.miniproject.global.exception.NoSuchEntityException;
 import com.example.miniproject.global.utils.ScheduleValidator;
 import java.util.Objects;
@@ -128,7 +129,7 @@ public class CartServiceImpl implements CartService{
         );
 
         if (roomTypeStock <= roomTypeStockInCart) {
-            throw new RuntimeException(); // Todo 예외처리
+            throw new NoStockException();
         }
     }
 }
