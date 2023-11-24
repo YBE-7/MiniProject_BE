@@ -17,6 +17,7 @@ import com.example.miniproject.domain.roomtype.entity.RoomType;
 import com.example.miniproject.domain.roomtype.repository.RoomTypeRepository;
 import com.example.miniproject.domain.roomtype.service.RoomTypeService;
 import com.example.miniproject.global.exception.AccessForbiddenException;
+import com.example.miniproject.global.exception.NoStockException;
 import com.example.miniproject.global.exception.NoSuchEntityException;
 import com.example.miniproject.global.utils.CodeGenerator;
 import com.example.miniproject.global.utils.ScheduleValidator;
@@ -87,7 +88,7 @@ public class OrderServiceImpl implements OrderService {
             roomType,
             request.checkinDate(),
             request.checkoutDate()
-        ).orElseThrow(RuntimeException::new);
+        ).orElseThrow(NoStockException::new);
     }
 
     private void deleteOneCartItem(Member member, OrderItemRegisterRequest request) {

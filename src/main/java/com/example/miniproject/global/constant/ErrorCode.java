@@ -24,7 +24,8 @@ public enum ErrorCode {
     INVALID_PARAM_ERROR("유효하지 않은 데이터"),
     DUPLICATE_EMAIL("이미 존재하는 이메일"),
     ACCESS_FORBIDDEN("권한 오류"),
-    DUPLICATE_LIKE("중복 좋아요 오류");
+    DUPLICATE_LIKE("중복 좋아요 오류"),
+    NO_STOCK_ERROR("재고 부족 오류");
 
     private final String message;
 }
