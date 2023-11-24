@@ -5,7 +5,7 @@ public record AccommodationResponse(
     String name,
     Double star,
     Integer price,
-    String thumbnail
+    String image
 ) {
 
 }

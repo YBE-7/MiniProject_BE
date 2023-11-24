@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 public record OrderRegisterRequest(
@@ -13,17 +14,13 @@ public record OrderRegisterRequest(
     @NotEmpty
     List<@Valid OrderItemRegisterRequest> orderItems,
 
-    @NotBlank
-    String clientName,
+    @NotNull
+    @Valid
+    ClientRequest client,
 
-    @NotBlank
-    String clientPhoneNumber,
-
-    @NotBlank
-    String subscriberName,
-
-    @NotBlank
-    String subscriberPhoneNumber,
+    @NotNull
+    @Valid
+    SubscriberRequest subscriber,
 
     @NotBlank
     String paymentMethod
@@ -31,10 +28,10 @@ public record OrderRegisterRequest(
     public Order toEntity(Member member, String code) {
         return Order.create(
             member,
-            this.clientName,
-            this.clientPhoneNumber,
-            this.subscriberName,
-            this.subscriberPhoneNumber,
+            this.client.name(),
+            this.client.phoneNumber(),
+            this.subscriber.name(),
+            this.subscriber().phoneNumber(),
             this.paymentMethod,
             code
         );
