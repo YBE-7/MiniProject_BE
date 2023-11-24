@@ -65,7 +65,7 @@ public class AccommodationController {
     }
 
     @GetMapping("/{id}/roomtypes")
-    public ResponseEntity<?> getRoomTypes(
+    public ResponseEntity<?> searchRoomTypes(
         @PathVariable("id") Long id,
         @Valid RoomTypeSearchCondition condition
     ) {
@@ -73,7 +73,7 @@ public class AccommodationController {
             .ok()
             .body(
                 ApiUtils.success(
-                    roomTypeService.getRoomTypes(id, condition)
+                    roomTypeService.search(id, condition)
                 )
             );
     }

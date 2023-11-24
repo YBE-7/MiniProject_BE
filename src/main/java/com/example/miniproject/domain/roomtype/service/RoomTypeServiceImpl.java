@@ -42,25 +42,17 @@ public class RoomTypeServiceImpl implements RoomTypeService {
 
     @Override
     @Transactional
-    public List<RoomTypeResponse> getRoomTypes(
+    public List<RoomTypeResponse> search(
         Long accommodationId,
         RoomTypeSearchCondition condition
     ) {
         Accommodation accommodation = accommodationRepository.findById(accommodationId)
             .orElseThrow(NoSuchEntityException::new);
 
-        return roomTypeRepository
-            .findByAccommodationAndCapacityGreaterThanEqual(accommodation, condition.capacity())
-            .stream()
-            .map(roomType -> {
-                Long stock = roomTypeRepository.getStockBySchedule(
-                    roomType,
-                    condition.from(),
-                    condition.to()
-                );
-                return new RoomTypeResponse(roomType, stock);
-            })
-            .toList();
+        return roomTypeRepository.findBySearchCondition(
+            accommodation,
+            condition
+        );
     }
 
     @Override
