@@ -1,10 +1,10 @@
 package com.example.miniproject.domain.roomtype.repository;
 
 import static com.example.miniproject.domain.order.entity.QOrderItem.orderItem;
-import static com.example.miniproject.domain.room.entity.QRoom.room;
+import static com.example.miniproject.domain.roomtype.entity.QRoom.room;
 
-import com.example.miniproject.domain.room.entity.QRoom;
-import com.example.miniproject.domain.room.entity.Room;
+import com.example.miniproject.domain.roomtype.entity.QRoom;
+import com.example.miniproject.domain.roomtype.entity.Room;
 import com.example.miniproject.domain.roomtype.entity.RoomType;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;

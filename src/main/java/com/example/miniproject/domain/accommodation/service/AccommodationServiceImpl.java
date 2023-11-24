@@ -2,9 +2,11 @@ package com.example.miniproject.domain.accommodation.service;
 
 import com.example.miniproject.domain.accommodation.dto.request.AccommodationRegisterRequest;
 import com.example.miniproject.domain.accommodation.dto.request.AccommodationSearchCondition;
+import com.example.miniproject.domain.accommodation.dto.request.AccommodationsRegisterRequest;
 import com.example.miniproject.domain.accommodation.dto.response.AccommodationDetailResponse;
 import com.example.miniproject.domain.accommodation.dto.response.AccommodationPageResponse;
 import com.example.miniproject.domain.accommodation.dto.response.AccommodationRegisterResponse;
+import com.example.miniproject.domain.accommodation.dto.response.AccommodationsRegisterResponse;
 import com.example.miniproject.domain.accommodation.entity.Accommodation;
 import com.example.miniproject.domain.accommodation.entity.AccommodationImage;
 import com.example.miniproject.domain.accommodation.repository.AccommodationRepository;
@@ -23,11 +25,13 @@ public class AccommodationServiceImpl implements AccommodationService {
 
     @Override
     @Transactional
-    public AccommodationRegisterResponse register(AccommodationRegisterRequest request) {
-        Accommodation accommodation = request.toEntity();
-        request.images()
-            .forEach(image -> accommodation.addImage(AccommodationImage.create(image)));
-        return new AccommodationRegisterResponse(accommodationRepository.save(accommodation));
+    public AccommodationsRegisterResponse register(AccommodationsRegisterRequest request) {
+        return new AccommodationsRegisterResponse(
+            request.data()
+                .stream()
+                .map(this::register)
+                .toList()
+        );
     }
 
     @Override
@@ -49,5 +53,12 @@ public class AccommodationServiceImpl implements AccommodationService {
             images.add(image.getUrl());
         }
         return new AccommodationDetailResponse(accommodation, images);
+    }
+
+    private AccommodationRegisterResponse register(AccommodationRegisterRequest request) {
+        Accommodation accommodation = request.toEntity();
+        request.images()
+            .forEach(image -> accommodation.addImage(AccommodationImage.create(image)));
+        return new AccommodationRegisterResponse(accommodationRepository.save(accommodation));
     }
 }

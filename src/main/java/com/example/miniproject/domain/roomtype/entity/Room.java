@@ -1,6 +1,5 @@
-package com.example.miniproject.domain.room.entity;
+package com.example.miniproject.domain.roomtype.entity;
 
-import com.example.miniproject.domain.roomtype.entity.RoomType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -32,18 +31,18 @@ public class Room {
     private String name;
 
     private Room(
-        RoomType roomType,
         String name
     ) {
-        this.roomType = roomType;
-        roomType.addRoom(this);
         this.name = name;
     }
 
     public static Room create(
-        RoomType roomType,
         String name
     ) {
-        return new Room(roomType, name);
+        return new Room(name);
+    }
+
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
     }
 }

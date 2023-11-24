@@ -2,14 +2,14 @@ package com.example.miniproject.domain.accommodation.repository;
 
 import static com.example.miniproject.domain.accommodation.entity.QAccommodation.accommodation;
 import static com.example.miniproject.domain.order.entity.QOrderItem.*;
-import static com.example.miniproject.domain.room.entity.QRoom.room;
+import static com.example.miniproject.domain.roomtype.entity.QRoom.room;
 import static com.example.miniproject.domain.roomtype.entity.QRoomType.roomType;
 import static com.example.miniproject.global.constant.SearchOrderCondition.PRICE_ASC;
 import static com.example.miniproject.global.constant.SearchOrderCondition.PRICE_DESC;
 
 import com.example.miniproject.domain.accommodation.dto.request.AccommodationSearchCondition;
 import com.example.miniproject.domain.accommodation.dto.response.AccommodationResponse;
-import com.example.miniproject.domain.room.entity.QRoom;
+import com.example.miniproject.domain.roomtype.entity.QRoom;
 import com.example.miniproject.global.constant.AccommodationType;
 import com.example.miniproject.global.constant.Region;
 import com.example.miniproject.global.constant.SearchOrderCondition;

@@ -1,7 +1,6 @@
 package com.example.miniproject.domain.roomtype.entity;
 
 import com.example.miniproject.domain.accommodation.entity.Accommodation;
-import com.example.miniproject.domain.room.entity.Room;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,7 +41,7 @@ public class RoomType {
     @Column(nullable = false)
     private Integer capacity;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String introduction;
 
     @Column(nullable = false)
@@ -89,5 +88,6 @@ public class RoomType {
 
     public void addRoom(Room room) {
         rooms.add(room);
+        room.setRoomType(this);
     }
 }
