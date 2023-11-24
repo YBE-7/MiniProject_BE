@@ -9,7 +9,10 @@ public record RoomTypeSearchCondition(
     LocalDate from,
 
     @NotNull
-    LocalDate to
+    LocalDate to,
+
+    @NotNull
+    Integer capacity
 ) {
 
 }
