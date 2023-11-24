@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface RoomTypeService {
     RoomTypesRegisterResponse register(RoomTypesRegisterRequest request);
 
-    List<RoomTypeResponse> getRoomTypes(
+    List<RoomTypeResponse> search(
         Long accommodationId,
         RoomTypeSearchCondition condition
     );
