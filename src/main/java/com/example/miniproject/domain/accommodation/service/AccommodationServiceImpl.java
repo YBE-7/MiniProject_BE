@@ -38,7 +38,10 @@ public class AccommodationServiceImpl implements AccommodationService {
     @Override
     @Transactional
     public AccommodationPageResponse search(AccommodationSearchCondition condition) {
-        ScheduleValidator.validate(condition.from(), condition.to());
+        if (condition.from() != null && condition.to() != null) {
+            ScheduleValidator.validate(condition.from(), condition.to());
+        }
+
         return new AccommodationPageResponse(
             accommodationRepository.findBySearchCondition(condition)
         );

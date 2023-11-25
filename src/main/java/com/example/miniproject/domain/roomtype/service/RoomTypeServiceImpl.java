@@ -50,7 +50,7 @@ public class RoomTypeServiceImpl implements RoomTypeService {
         Long accommodationId,
         RoomTypeSearchCondition condition
     ) {
-        ScheduleValidator.validate(condition.from(), condition.to());
+        ScheduleValidator.validate(condition.getFrom(), condition.getTo());
 
         Accommodation accommodation = accommodationRepository.findById(accommodationId)
             .orElseThrow(NoSuchEntityException::new);
@@ -59,9 +59,9 @@ public class RoomTypeServiceImpl implements RoomTypeService {
             .stream()
             .map(roomType -> {
                 Long stock = roomTypeRepository.getStockBySchedule(
-                    roomType, condition.from(), condition.to()
+                    roomType, condition.getFrom(), condition.getTo()
                 );
-                RoomTypeStatus status = getRoomTypeStatus(roomType, stock, condition.capacity());
+                RoomTypeStatus status = getRoomTypeStatus(roomType, stock, condition.getCapacity());
                 return new RoomTypeResponse(roomType, stock, status);
             })
             .sorted((r1, r2) -> {
