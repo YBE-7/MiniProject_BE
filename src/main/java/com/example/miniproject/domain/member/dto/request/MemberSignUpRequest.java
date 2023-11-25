@@ -17,6 +17,7 @@ public record MemberSignUpRequest(
     String password,
 
     @NotBlank
+    @Pattern(regexp = "^[a-zA-Z가-힣]{2,16}$")
     String name
 ) {
     public Member toEntity() {
