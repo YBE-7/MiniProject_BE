@@ -2,17 +2,20 @@ package com.example.miniproject.domain.roomtype.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-public record RoomTypeSearchCondition(
+@NoArgsConstructor
+@Getter
+@Setter
+public class RoomTypeSearchCondition {
+    @NotNull
+    private LocalDate from;
 
     @NotNull
-    LocalDate from,
+    private LocalDate to;
 
     @NotNull
-    LocalDate to,
-
-    @NotNull
-    Integer capacity
-) {
-
+    private Integer capacity;
 }
