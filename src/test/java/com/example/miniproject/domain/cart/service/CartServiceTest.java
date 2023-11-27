@@ -4,7 +4,6 @@ import com.example.miniproject.domain.accommodation.entity.Accommodation;
 import com.example.miniproject.domain.accommodation.entity.Location;
 import com.example.miniproject.domain.cart.dto.request.CartItemRegisterRequest;
 import com.example.miniproject.domain.cart.dto.response.CartItemRegisterResponse;
-import com.example.miniproject.domain.cart.dto.response.CartItemResponse;
 import com.example.miniproject.domain.cart.dto.response.CartResponse;
 import com.example.miniproject.domain.cart.entity.CartItem;
 import com.example.miniproject.domain.cart.repository.CartRepository;
@@ -18,16 +17,13 @@ import com.example.miniproject.global.exception.NoStockException;
 import com.example.miniproject.global.exception.NoSuchEntityException;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
