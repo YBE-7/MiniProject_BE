@@ -21,6 +21,7 @@ import com.example.miniproject.domain.roomtype.entity.RoomType;
 import com.example.miniproject.domain.roomtype.repository.RoomRepository;
 import com.example.miniproject.domain.roomtype.repository.RoomTypeRepository;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -71,13 +72,17 @@ class OrderServiceConcurrencyTest {
 
     @Test
     void order_concurrency() throws InterruptedException {
-
         int threadCount = 100;
         ExecutorService executorService = Executors.newFixedThreadPool(32);
         CountDownLatch latch = new CountDownLatch(threadCount);
 
+        Accommodation accommodation = singleAccommodation();
+        RoomType roomType = singleRoomType(accommodation);
+        Room room1 = singleRoom(roomType);
+        //Room room2 = singleRoom(roomType);
+        List<Long> memberIds = new ArrayList<>();
         for (int i = 0; i < threadCount; i++) {
-            memberRepository.save(
+            Member member = memberRepository.save(
                 Member.create(
                     "email" + i,
                     "password",
@@ -85,23 +90,30 @@ class OrderServiceConcurrencyTest {
                     MEMBER
                 )
             );
+            memberIds.add(member.getId());
         }
 
-        OrderItemRegisterRequest orderItemRegisterRequest = new OrderItemRegisterRequest(
-            1L,
+        OrderItemRegisterRequest orderItemRegisterRequest1 = new OrderItemRegisterRequest(
+            roomType.getId(),
             LocalDate.of(2023, 12, 1),
             LocalDate.of(2023, 12, 3)
         );
+//        OrderItemRegisterRequest orderItemRegisterRequest2 = new OrderItemRegisterRequest(
+//            roomType.getId(),
+//            LocalDate.of(2023, 11, 30),
+//            LocalDate.of(2023, 12, 2)
+//        );
         OrderRegisterRequest orderRegisterRequest = new OrderRegisterRequest(
-            List.of(orderItemRegisterRequest),
+            List.of(orderItemRegisterRequest1),
             new ClientRequest("name", "010"),
             new SubscriberRequest("name", "010"),
             "NAVER"
         );
 
-        for (int i = 1; i <= threadCount; i++) {
-            execute(executorService, latch, (long) i, orderRegisterRequest);
+        for (int i = 0; i < memberIds.size(); i++) {
+            execute(executorService, latch, (long) memberIds.get(i), orderRegisterRequest);
         }
+
         latch.await();
 
         List<Order> orders = orderRepository.findAll();
