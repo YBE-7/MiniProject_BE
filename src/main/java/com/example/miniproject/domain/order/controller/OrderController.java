@@ -2,6 +2,7 @@ package com.example.miniproject.domain.order.controller;
 
 import com.example.miniproject.domain.order.dto.request.OrderRegisterRequest;
 import com.example.miniproject.domain.order.service.OrderService;
+import com.example.miniproject.domain.order.service.OrderServiceFacade;
 import com.example.miniproject.global.security.MemberDetails;
 import com.example.miniproject.global.utils.ApiUtils;
 import jakarta.validation.Valid;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
 
     private final OrderService orderService;
+    private final OrderServiceFacade orderServiceFacade;
 
     @PostMapping
     public ResponseEntity<?> registerOrder(
@@ -32,7 +34,10 @@ public class OrderController {
             .status(HttpStatus.CREATED)
             .body(
                 ApiUtils.success(
-                    orderService.registerOrder(memberDetails.getId(), orderRegisterRequest)
+                    orderServiceFacade.registerOrder(
+                        memberDetails.getId(),
+                        orderRegisterRequest
+                    )
                 )
             );
     }
