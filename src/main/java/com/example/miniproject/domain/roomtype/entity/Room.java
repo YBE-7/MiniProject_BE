@@ -36,10 +36,25 @@ public class Room {
         this.name = name;
     }
 
+    private Room(
+        RoomType roomType,
+        String name
+    ) {
+        this.roomType = roomType;
+        this.name = name;
+    }
+
     public static Room create(
         String name
     ) {
         return new Room(name);
+    }
+
+    public static Room create(
+        RoomType roomType,
+        String name
+    ) {
+        return new Room(roomType, name);
     }
 
     public void setRoomType(RoomType roomType) {
