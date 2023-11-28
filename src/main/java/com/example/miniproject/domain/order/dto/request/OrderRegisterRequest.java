@@ -2,8 +2,8 @@ package com.example.miniproject.domain.order.dto.request;
 
 import com.example.miniproject.domain.member.entity.Member;
 import com.example.miniproject.domain.order.entity.Order;
+import com.example.miniproject.global.constant.PaymentMethod;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 
 import jakarta.validation.constraints.NotNull;
@@ -22,8 +22,8 @@ public record OrderRegisterRequest(
     @Valid
     SubscriberRequest subscriber,
 
-    @NotBlank
-    String paymentMethod
+    @NotNull
+    PaymentMethod paymentMethod
 ) {
     public Order toEntity(Member member, String code) {
         return Order.create(
