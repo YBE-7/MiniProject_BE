@@ -144,16 +144,16 @@ public class GlobalControllerAdvice {
             );
     }
 
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<?> handleException(
-//        Exception ex
-//    ) {
-//        log.error("handling {}, message : {}", ex.getClass().toString(), ex.getMessage());
-//
-//        return ResponseEntity
-//            .internalServerError()
-//            .body(
-//                ApiUtils.error(ErrorCode.INTERNAL_SERVER_ERROR.getMessage())
-//            );
-//    }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> handleException(
+        Exception ex
+    ) {
+        log.error("handling {}, message : {}", ex.getClass().toString(), ex.getMessage());
+
+        return ResponseEntity
+            .internalServerError()
+            .body(
+                ApiUtils.error(ErrorCode.INTERNAL_SERVER_ERROR.getMessage())
+            );
+    }
 }
