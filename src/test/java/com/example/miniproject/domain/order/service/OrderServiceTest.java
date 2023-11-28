@@ -1,5 +1,7 @@
 package com.example.miniproject.domain.order.service;
 
+import static com.example.miniproject.global.constant.PaymentMethod.NAVER_PAY;
+
 import com.example.miniproject.domain.accommodation.entity.Accommodation;
 import com.example.miniproject.domain.accommodation.entity.Location;
 import com.example.miniproject.domain.member.entity.Member;
@@ -116,7 +118,7 @@ class OrderServiceTest {
             ),
             new ClientRequest("홍길동", "010-1234-5678"),
             new SubscriberRequest("홍길동", "010-1234-5678"),
-            "card"
+            NAVER_PAY
         );
 
 
@@ -133,7 +135,7 @@ class OrderServiceTest {
             ),
             new ClientRequest("홍길동", "010-1234-5678"),
             new SubscriberRequest("홍길동", "010-1234-5678"),
-            "card"
+            NAVER_PAY
         );
 
         //when, then
@@ -150,7 +152,7 @@ class OrderServiceTest {
             ),
             new ClientRequest("홍길동", "010-1234-5678"),
             new SubscriberRequest("홍길동", "010-1234-5678"),
-            "card"
+            NAVER_PAY
         );
 
 
