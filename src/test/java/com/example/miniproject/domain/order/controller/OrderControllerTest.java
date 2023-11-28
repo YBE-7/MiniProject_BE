@@ -27,6 +27,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import static com.example.miniproject.global.constant.PaymentMethod.NAVER_PAY;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
@@ -60,7 +61,7 @@ class OrderControllerTest {
             ),
             new ClientRequest("홍길동", "010-1234-5678"),
             new SubscriberRequest("홍길동", "010-1234-5678"),
-            "card"
+            NAVER_PAY
         );
         OrderRegisterResponse response = new OrderRegisterResponse(1L);
         given(orderService.registerOrder(any(), any()))

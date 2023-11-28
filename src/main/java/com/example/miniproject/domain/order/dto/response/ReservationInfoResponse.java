@@ -9,7 +9,7 @@ public record ReservationInfoResponse(
     public ReservationInfoResponse(Order order) {
         this(
             order.getCode(),
-            order.getPaymentMethod()
+            order.getPaymentMethod().name()
         );
     }
 }
