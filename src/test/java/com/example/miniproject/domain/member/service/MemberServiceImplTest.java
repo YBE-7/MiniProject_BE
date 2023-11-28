@@ -4,7 +4,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.example.miniproject.domain.accommodation.entity.Accommodation;
 import com.example.miniproject.domain.accommodation.entity.Location;
-import com.example.miniproject.domain.cart.dto.request.CartItemRegisterRequest;
 import com.example.miniproject.domain.cart.repository.CartRepository;
 import com.example.miniproject.domain.cart.service.CartServiceImpl;
 import com.example.miniproject.domain.member.dto.request.MemberLoginRequest;
@@ -12,10 +11,6 @@ import com.example.miniproject.domain.member.dto.request.MemberSignUpRequest;
 import com.example.miniproject.domain.member.dto.response.*;
 import com.example.miniproject.domain.member.entity.Member;
 import com.example.miniproject.domain.member.repository.MemberRepository;
-import com.example.miniproject.domain.order.dto.request.ClientRequest;
-import com.example.miniproject.domain.order.dto.request.OrderItemRegisterRequest;
-import com.example.miniproject.domain.order.dto.request.OrderRegisterRequest;
-import com.example.miniproject.domain.order.dto.request.SubscriberRequest;
 import com.example.miniproject.domain.order.entity.Order;
 import com.example.miniproject.domain.order.entity.OrderItem;
 import com.example.miniproject.domain.order.repository.OrderRepository;
@@ -27,49 +22,30 @@ import com.example.miniproject.global.constant.Region;
 import com.example.miniproject.global.constant.Role;
 import com.example.miniproject.global.security.JwtService;
 import com.example.miniproject.global.security.MemberDetails;
-import com.example.miniproject.global.security.MemberDetailsService;
 import jakarta.persistence.EntityManager;
-import jakarta.servlet.annotation.HttpConstraint;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.weaver.ast.Or;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.WebApplicationContext;
-
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
 @SpringBootTest
 @Transactional
@@ -221,20 +197,13 @@ class MemberServiceImplTest {
         em.persist(testRoomType);
 
         Order order1 = Order.create(testMember, "hyemin", "010-1234-1234", "hyemin", "010-1234-1234", "NAVER", "53edfef");
-        OrderItem orderItem1 = OrderItem.create(order1, room1, LocalDate.of(2023, 11, 11), LocalDate.of(2023, 11, 12), "qwerasd123");
+        OrderItem orderItem1 = OrderItem.create(order1, room1, LocalDate.of(2023, 11, 11), LocalDate.of(2023, 11, 12), "qwerasd123", 10000);
         order1.addOrderItem(orderItem1);
         em.persist(order1);
         em.persist(orderItem1);
         List<Order> orderList = new ArrayList<>();
         orderList.add(order1);
         when(orderRepository.findByMemberOrderByIdDesc(testMember)).thenReturn(orderList);
-
-        CartItemRegisterRequest cartItemRegisterRequest =
-            new CartItemRegisterRequest(
-                testRoomType.getId(),
-                LocalDate.of(2023, 12, 1),
-                LocalDate.of(2023, 12, 3)
-            );
 
         List<OrderResponse> orderResponseList = memberService.getOrders(1L);
 

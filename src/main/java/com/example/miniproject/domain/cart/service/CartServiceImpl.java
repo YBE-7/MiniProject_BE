@@ -35,12 +35,8 @@ public class CartServiceImpl implements CartService{
     public CartResponse getCartItems(Long memberId) {
         Member member = memberRepository.getReferenceById(memberId);
         List<CartItem> cartItems = cartRepository.findAllByMember(member);
-        int totalPrice = cartItems.stream()
-            .mapToInt(cartItem -> cartItem.getRoomType().getPrice())
-            .sum();
         return new CartResponse(
-            getCartItemResponses(cartItems),
-            totalPrice
+            getCartItemResponses(cartItems)
         );
     }
 

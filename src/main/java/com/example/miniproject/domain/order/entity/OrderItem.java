@@ -34,18 +34,23 @@ public class OrderItem {
     @Column(nullable = false)
     private String code;
 
+    @Column(nullable = false)
+    private Integer price;
+
     private OrderItem(
         Order order,
         Room room,
         LocalDate checkinDate,
         LocalDate checkoutDate,
-        String code
+        String code,
+        Integer price
     ) {
         this.order = order;
         this.room = room;
         this.checkinDate = checkinDate;
         this.checkoutDate = checkoutDate;
         this.code = code;
+        this.price = price;
     }
 
     public static OrderItem create(
@@ -53,9 +58,10 @@ public class OrderItem {
         Room room,
         LocalDate checkinDate,
         LocalDate checkoutDate,
-        String code
+        String code,
+        Integer price
     ) {
-        return new OrderItem(order, room, checkinDate, checkoutDate, code);
+        return new OrderItem(order, room, checkinDate, checkoutDate, code, price);
     }
 
     public void setOrder(Order order) {
