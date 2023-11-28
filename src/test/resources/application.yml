@@ -2,7 +2,7 @@ spring:
 
   datasource:
     hikari:
-      maximum-pool-size: 30
+      maximum-pool-size: 10
       max-lifetime: 60000
       jdbc-url: ${DB_URL}
       username: ${DB_USERNAME}
@@ -34,7 +34,7 @@ spring:
 lock:
   datasource:
     hikari:
-      maximum-pool-size: 20
+      maximum-pool-size: 10
       max-lifetime: 60000
       jdbc-url: ${JDBC_URL}
       username: ${JDBC_USERNAME}
