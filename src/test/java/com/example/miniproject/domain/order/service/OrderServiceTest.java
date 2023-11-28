@@ -2,16 +2,20 @@ package com.example.miniproject.domain.order.service;
 
 import com.example.miniproject.domain.accommodation.entity.Accommodation;
 import com.example.miniproject.domain.accommodation.entity.Location;
+import com.example.miniproject.domain.accommodation.repository.AccommodationRepository;
 import com.example.miniproject.domain.member.entity.Member;
+import com.example.miniproject.domain.member.repository.MemberRepository;
 import com.example.miniproject.domain.order.dto.request.ClientRequest;
 import com.example.miniproject.domain.order.dto.request.OrderItemRegisterRequest;
 import com.example.miniproject.domain.order.dto.request.OrderRegisterRequest;
 import com.example.miniproject.domain.order.dto.request.SubscriberRequest;
-import com.example.miniproject.domain.order.dto.response.OrderResponse;
+import com.example.miniproject.domain.order.dto.response.OrderRegisterResponse;
 import com.example.miniproject.domain.order.entity.Order;
 import com.example.miniproject.domain.order.repository.OrderRepository;
 import com.example.miniproject.domain.roomtype.entity.Room;
 import com.example.miniproject.domain.roomtype.entity.RoomType;
+import com.example.miniproject.domain.roomtype.repository.RoomRepository;
+import com.example.miniproject.domain.roomtype.repository.RoomTypeRepository;
 import com.example.miniproject.global.constant.AccommodationType;
 import com.example.miniproject.global.constant.Region;
 import com.example.miniproject.global.constant.Role;
@@ -26,7 +30,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 @SpringBootTest
 @Transactional
@@ -38,6 +41,14 @@ class OrderServiceTest {
     OrderServiceImpl orderService;
     @Autowired
     OrderRepository orderRepository;
+    @Autowired
+    MemberRepository memberRepository;
+    @Autowired
+    AccommodationRepository accommodationRepository;
+    @Autowired
+    RoomTypeRepository roomTypeRepository;
+    @Autowired
+    RoomRepository roomRepository;
 
     @BeforeEach
     void setUp() {
@@ -143,30 +154,79 @@ class OrderServiceTest {
     @Test
     void registerOrder() {
         //given
+        Member member = memberRepository.save(Member.create(
+            "asdfasdf@email.com",
+            "name",
+            "password123!!!",
+            Role.MEMBER
+        ));
+        Accommodation accommodation = accommodationRepository.save(singleAccommodation());
+        RoomType roomType = roomTypeRepository.save(
+            singleRoomType(accommodation, 1000, 4)
+        );
+        roomRepository.save(singleRoom(roomType));
         OrderRegisterRequest request = new OrderRegisterRequest(
             Arrays.asList(
-                new OrderItemRegisterRequest(1L, LocalDate.parse("2023-11-27"), LocalDate.parse("2023-11-28")),
-                new OrderItemRegisterRequest(2L, LocalDate.parse("2023-11-29"), LocalDate.parse("2023-11-30"))
+                new OrderItemRegisterRequest(roomType.getId(), LocalDate.parse("2023-11-27"), LocalDate.parse("2023-11-28")),
+                new OrderItemRegisterRequest(roomType.getId(), LocalDate.parse("2023-11-29"), LocalDate.parse("2023-11-30"))
             ),
             new ClientRequest("홍길동", "010-1234-5678"),
             new SubscriberRequest("홍길동", "010-1234-5678"),
             "card"
         );
 
-
         //when
-
-        orderService.registerOrder(1L, request);
-        Optional<Order> order = orderRepository.findById(1L);
-        OrderResponse orderResponse = orderService.getOrder(1L, 1L);
+        OrderRegisterResponse response = orderService.registerOrder(
+            member.getId(),
+            request
+        );
 
         //then
-        order.ifPresent(value -> Assertions.assertEquals(value.getOrderItems().size(), 2));
+        Order order = orderRepository.findById(response.orderId()).get();
 
-        Assertions.assertEquals(orderResponse.client().name(), "홍길동");
-        Assertions.assertEquals(orderResponse.client().phoneNumber(), "010-1234-5678");
-        Assertions.assertEquals(orderResponse.subscriber().name(), "홍길동");
-        Assertions.assertEquals(orderResponse.subscriber().phoneNumber(), "010-1234-5678");
-        Assertions.assertEquals(orderResponse.totalPrice(), 110000);
+        Assertions.assertEquals(order.getClientName(), "홍길동");
+        Assertions.assertEquals(order.getClientPhoneNumber(), "010-1234-5678");
+        Assertions.assertEquals(order.getSubscriberName(), "홍길동");
+        Assertions.assertEquals(order.getSubscriberPhoneNumber(), "010-1234-5678");
+        Assertions.assertEquals(order.getTotalPrice(), 2000);
+    }
+
+    private Accommodation singleAccommodation() {
+        return Accommodation.create(
+            AccommodationType.HOTEL,
+            Region.BUSAN,
+            "킹호텔",
+            "제일 좋습니다",
+            "조식,와이파이",
+            4.7,
+            Location.create(
+                "서울시 강남구",
+                122.124125,
+                123.1235426
+            ),
+            "thumbnailUrl"
+        );
+    }
+
+    private RoomType singleRoomType(
+        Accommodation accommodation,
+        int price,
+        int capacity
+    ) {
+        return RoomType.create(
+            accommodation,
+            "name",
+            price,
+            capacity,
+            "introduction",
+            "service"
+        );
+    }
+
+    private Room singleRoom(RoomType roomType) {
+        return Room.create(
+            roomType,
+            "room1"
+        );
     }
 }
