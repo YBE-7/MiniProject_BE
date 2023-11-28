@@ -8,7 +8,6 @@ import java.util.List;
 public record RoomTypeDetailResponse(
     Long id,
     String name,
-    Integer price,
     Integer capacity,
     String introduction,
     List<String> services,
@@ -18,7 +17,6 @@ public record RoomTypeDetailResponse(
         this(
             roomType.getId(),
             roomType.getName(),
-            roomType.getPrice(),
             roomType.getCapacity(),
             roomType.getIntroduction(),
             Arrays.stream(roomType.getService()

@@ -17,13 +17,19 @@ public record OrderItemRegisterRequest(
     @NotNull
     LocalDate checkoutDate
 ) {
-    public OrderItem toEntity(Order order, Room room, String code) {
+    public OrderItem toEntity(
+        Order order,
+        Room room,
+        String code,
+        Integer price
+    ) {
         return OrderItem.create(
             order,
             room,
             this.checkinDate,
             this.checkoutDate,
-            code
+            code,
+            price
         );
     }
 }
