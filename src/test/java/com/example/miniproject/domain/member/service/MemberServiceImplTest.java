@@ -18,6 +18,7 @@ import com.example.miniproject.domain.order.service.OrderServiceImpl;
 import com.example.miniproject.domain.roomtype.entity.Room;
 import com.example.miniproject.domain.roomtype.entity.RoomType;
 import com.example.miniproject.global.constant.AccommodationType;
+import com.example.miniproject.global.constant.PaymentMethod;
 import com.example.miniproject.global.constant.Region;
 import com.example.miniproject.global.constant.Role;
 import com.example.miniproject.global.security.JwtService;
@@ -196,7 +197,7 @@ class MemberServiceImplTest {
 
         em.persist(testRoomType);
 
-        Order order1 = Order.create(testMember, "hyemin", "010-1234-1234", "hyemin", "010-1234-1234", "NAVER", "53edfef");
+        Order order1 = Order.create(testMember, "hyemin", "010-1234-1234", "hyemin", "010-1234-1234", PaymentMethod.NAVER_PAY, "53edfef");
         OrderItem orderItem1 = OrderItem.create(order1, room1, LocalDate.of(2023, 11, 11), LocalDate.of(2023, 11, 12), "qwerasd123", 10000);
         order1.addOrderItem(orderItem1);
         em.persist(order1);
