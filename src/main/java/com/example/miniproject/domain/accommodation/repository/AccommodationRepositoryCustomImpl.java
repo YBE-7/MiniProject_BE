@@ -13,10 +13,13 @@ import com.example.miniproject.domain.roomtype.entity.QRoom;
 import com.example.miniproject.global.constant.AccommodationType;
 import com.example.miniproject.global.constant.Region;
 import com.example.miniproject.global.constant.SearchOrderCondition;
+import com.example.miniproject.global.utils.DaysCalculator;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.NumberTemplate;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDate;
@@ -39,8 +42,10 @@ public class AccommodationRepositoryCustomImpl implements AccommodationRepositor
     public Page<AccommodationResponse> findBySearchCondition(
         AccommodationSearchCondition condition
     ) {
-
-        NumberExpression<Integer> minPrice = roomType.price.min();
+        int daysDifference = DaysCalculator.calculateDifference(condition.from(), condition.to());
+        NumberTemplate<Integer> minPrice = Expressions.numberTemplate(
+            Integer.class, "{0} * {1}", roomType.price.min(), daysDifference
+        );
         int offset = getOffset(condition.page());
         int limit = getLimit(condition.size());
         Pageable pageable = PageRequest.of(offset, limit);
