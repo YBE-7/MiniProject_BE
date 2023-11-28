@@ -104,6 +104,7 @@ class MemberControllerTest {
     @Test
     @DisplayName("로그인사용자 mypage 조회 컨트롤러 테스트")
     void getMyPage() throws Exception {
+
         //given
         Member member = Member.create("hyem5019@email.com", "hyemin", "qwerasqweras!1", Role.MEMBER);
         MemberLoginRequest memberLoginRequest = new MemberLoginRequest(member.getEmail(), member.getPassword());

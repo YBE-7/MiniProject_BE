@@ -122,6 +122,7 @@ class MemberServiceImplTest {
         //given
         MemberSignUpRequest signUpRequest = new MemberSignUpRequest("tester@email.com", "qwerasqweras!1", "tester");
         when(memberRepository.findByEmail("hyem5019@email.com")).thenReturn(Optional.of(Member.create("hyem5019@email.com", "hyemin", "qwerasqweras!1", Role.MEMBER)));
+
         //when
 
         //then

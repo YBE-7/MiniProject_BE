@@ -24,8 +24,10 @@ class MemberRepositoryTest {
         //given
         Member member = Member.create("hyem5019@email.com", "hyemin", "qwerasqweras!1", Role.MEMBER);
         Member member1 = memberRepository.save(member);
+
         //when
         Optional<Member> userEmail = memberRepository.findByEmail("hyem5019@email.com");
+
         //then
         Assertions.assertThat(member.getEmail()).isEqualTo(userEmail.get().getEmail());
         System.out.println(member.getEmail());
