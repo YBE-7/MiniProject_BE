@@ -1,6 +1,7 @@
 package com.example.miniproject.domain.order.entity;
 
 import com.example.miniproject.domain.member.entity.Member;
+import com.example.miniproject.global.constant.PaymentMethod;
 import com.example.miniproject.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 
@@ -40,8 +41,8 @@ public class Order extends BaseTimeEntity {
     @Column(nullable = false)
     private String subscriberPhoneNumber;
 
-    @Column(nullable = false)
-    private String paymentMethod;
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
 
     @Column(nullable = false)
     private String code;
@@ -55,7 +56,7 @@ public class Order extends BaseTimeEntity {
         String clientPhoneNumber,
         String subscriberName,
         String subscriberPhoneNumber,
-        String paymentMethod,
+        PaymentMethod paymentMethod,
         String code
     ) {
         this.member = member;
@@ -74,7 +75,7 @@ public class Order extends BaseTimeEntity {
         String clientPhoneNumber,
         String subscriberName,
         String subscriberPhoneNumber,
-        String paymentMethod,
+        PaymentMethod paymentMethod,
         String code
     ) {
         return new Order(
@@ -90,6 +91,6 @@ public class Order extends BaseTimeEntity {
 
     public void addOrderItem(OrderItem orderItem) {
         orderItems.add(orderItem);
-        this.totalPrice += orderItem.getRoom().getRoomType().getPrice();
+        this.totalPrice += orderItem.getPrice();
     }
 }

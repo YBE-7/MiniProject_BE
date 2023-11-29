@@ -20,7 +20,9 @@ import com.example.miniproject.global.exception.AccessForbiddenException;
 import com.example.miniproject.global.exception.NoStockException;
 import com.example.miniproject.global.exception.NoSuchEntityException;
 import com.example.miniproject.global.utils.CodeGenerator;
+import com.example.miniproject.global.utils.PriceCalculator;
 import com.example.miniproject.global.utils.ScheduleValidator;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -70,24 +72,38 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private void registerOrderItem(Order order, OrderItemRegisterRequest request) {
-        Room room = findAvailableRoom(request);
+        RoomType roomType = roomTypeRepository.findById(request.roomTypeId())
+            .orElseThrow(NoSuchEntityException::new);
+        Room room = findAvailableRoom(
+            roomType,
+            request.checkinDate(),
+            request.checkoutDate()
+        );
+        int price = PriceCalculator.calculateRoomTypePrice(
+            roomType,
+            request.checkinDate(),
+            request.checkoutDate()
+        );
         OrderItem orderItem = orderItemRepository.save(
             request.toEntity(
                 order,
                 room,
-                CodeGenerator.generate()
+                CodeGenerator.generate(),
+                price
             )
         );
         order.addOrderItem(orderItem);
     }
 
-    private Room findAvailableRoom(OrderItemRegisterRequest request) {
-        RoomType roomType = roomTypeRepository.findById(request.roomTypeId())
-            .orElseThrow(NoSuchEntityException::new);
+    private Room findAvailableRoom(
+        RoomType roomType,
+        LocalDate checkinDate,
+        LocalDate checkoutDate
+    ) {
         return roomTypeService.findAvailableRoom(
             roomType,
-            request.checkinDate(),
-            request.checkoutDate()
+            checkinDate,
+            checkoutDate
         ).orElseThrow(NoStockException::new);
     }
 

@@ -4,6 +4,7 @@ import com.example.miniproject.domain.accommodation.entity.Accommodation;
 import com.example.miniproject.domain.cart.entity.CartItem;
 
 import com.example.miniproject.domain.roomtype.entity.RoomType;
+import com.example.miniproject.global.utils.PriceCalculator;
 import java.time.LocalDate;
 
 public record CartItemResponse(
@@ -12,7 +13,8 @@ public record CartItemResponse(
     RoomTypeResponse roomType,
     LocalDate checkinDate,
     LocalDate checkoutDate,
-    Long stock
+    Long stock,
+    Integer price
 ) {
     public CartItemResponse(
         CartItem cartItem,
@@ -26,7 +28,12 @@ public record CartItemResponse(
             new RoomTypeResponse(roomType),
             cartItem.getCheckinDate(),
             cartItem.getCheckoutDate(),
-            stock
+            stock,
+            PriceCalculator.calculateRoomTypePrice(
+                roomType,
+                cartItem.getCheckinDate(),
+                cartItem.getCheckoutDate()
+            )
         );
     }
 }

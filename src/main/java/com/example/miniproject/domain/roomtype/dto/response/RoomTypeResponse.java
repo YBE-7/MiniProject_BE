@@ -16,13 +16,14 @@ public record RoomTypeResponse(
 ) {
     public RoomTypeResponse(
         RoomType roomType,
+        Integer price,
         Long stock,
         RoomTypeStatus status
     ) {
         this(
             roomType.getId(),
             roomType.getName(),
-            roomType.getPrice(),
+            price,
             roomType.getCapacity(),
             roomType.getImages()
                 .stream()

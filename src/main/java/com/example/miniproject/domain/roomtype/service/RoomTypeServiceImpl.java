@@ -17,6 +17,7 @@ import com.example.miniproject.domain.roomtype.entity.RoomTypeImage;
 import com.example.miniproject.domain.roomtype.repository.RoomTypeRepository;
 import com.example.miniproject.global.constant.RoomTypeStatus;
 import com.example.miniproject.global.exception.NoSuchEntityException;
+import com.example.miniproject.global.utils.PriceCalculator;
 import com.example.miniproject.global.utils.RandomNumberGenerator;
 import com.example.miniproject.global.utils.ScheduleValidator;
 import java.time.LocalDate;
@@ -61,8 +62,15 @@ public class RoomTypeServiceImpl implements RoomTypeService {
                 Long stock = roomTypeRepository.getStockBySchedule(
                     roomType, condition.getFrom(), condition.getTo()
                 );
-                RoomTypeStatus status = getRoomTypeStatus(roomType, stock, condition.getCapacity());
-                return new RoomTypeResponse(roomType, stock, status);
+                RoomTypeStatus status = getRoomTypeStatus(
+                    roomType, stock, condition.getCapacity()
+                );
+                int price = PriceCalculator.calculateRoomTypePrice(
+                    roomType,
+                    condition.getFrom(),
+                    condition.getTo()
+                );
+                return new RoomTypeResponse(roomType, price, stock, status);
             })
             .sorted((r1, r2) -> {
                 if (r1.status() == r2.status()) {

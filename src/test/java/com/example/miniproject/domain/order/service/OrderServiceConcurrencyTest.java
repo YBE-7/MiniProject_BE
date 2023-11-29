@@ -1,6 +1,7 @@
 package com.example.miniproject.domain.order.service;
 
 import static com.example.miniproject.global.constant.AccommodationType.HOTEL;
+import static com.example.miniproject.global.constant.PaymentMethod.*;
 import static com.example.miniproject.global.constant.Region.SEOUL;
 import static com.example.miniproject.global.constant.Role.MEMBER;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -107,11 +108,11 @@ class OrderServiceConcurrencyTest {
             List.of(orderItemRegisterRequest1),
             new ClientRequest("name", "010"),
             new SubscriberRequest("name", "010"),
-            "NAVER"
+            NAVER_PAY
         );
 
         for (int i = 0; i < memberIds.size(); i++) {
-            execute(executorService, latch, (long) memberIds.get(i), orderRegisterRequest);
+            execute(executorService, latch, memberIds.get(i), orderRegisterRequest);
         }
 
         latch.await();
