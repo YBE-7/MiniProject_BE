@@ -81,7 +81,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOrigins(
-            List.of("http://localhost:3000"));
+            List.of("http://localhost:3000","https://mini-team-7.vercel.app","http://mini-team-7.vercel.app"));
         configuration.setAllowedMethods(
             Arrays.asList("HEAD", "POST", "GET", "DELETE", "PUT", "OPTIONS", "PATCH"));
         configuration.addAllowedHeader(("*"));
