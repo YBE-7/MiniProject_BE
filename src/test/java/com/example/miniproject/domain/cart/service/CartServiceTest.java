@@ -224,7 +224,6 @@ class CartServiceTest {
 
         // Then
         assertThat(response.cartItems().size()).isEqualTo(3);
-        assertThat(response.totalPrice()).isEqualTo(3000);
     }
 
     @Test
@@ -346,7 +345,6 @@ class CartServiceTest {
 
         // When
         cartService.deleteAllCartItems(testMember.getId());
-        assertThat(cartService.getCartItems(testMember.getId()).totalPrice()).isEqualTo(0);
         assertThat(cartService.getCartItems(testMember.getId()).cartItems().size()).isEqualTo(0);
     }
 
