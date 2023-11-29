@@ -73,7 +73,6 @@ class OrderServiceConcurrencyTest {
 
     @Test
     void order_concurrency() throws InterruptedException {
-
         int threadCount = 100;
         ExecutorService executorService = Executors.newFixedThreadPool(32);
         CountDownLatch latch = new CountDownLatch(threadCount);
