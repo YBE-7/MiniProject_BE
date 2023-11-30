@@ -22,7 +22,7 @@
 ### ✨ BE 팀 소개
 | 서원빈 (BE) <br> | 정혜민 (BE) <br> | 황규철 (BE) <br> | 홍용현 (BE) <br> |
 |:------------------:|:------------------:|:------------------:|:------------------:|
-| ![서원빈](https://avatars.githubusercontent.com/u/81563920?v=4&size=300) | ![정혜민](https://avatars.githubusercontent.com/u/40512982?v=4&size=300) | ![김진홍](https://avatars.githubusercontent.com/u/33937365?v=4&size=300) | ![서원빈]()  |
-| [Dr-KoKo](https://github.com/Dr-KoKo)| [WaterSpray](https://github.com/whdgns5059) | [deepredk](https://github.com/deepredk) | [Seo Wonbin](https://github.com/Wonbn) |
+| ![서원빈](https://avatars.githubusercontent.com/u/81563920?v=4&size=300) | ![정혜민](https://avatars.githubusercontent.com/u/114489245?v=4&size=300) | ![황규철](https://avatars.githubusercontent.com/u/67046364?v=4&size=300) | ![홍용현](https://avatars.githubusercontent.com/u/108213846?v=4&size=300)  |
+| [WonBin](https://github.com/Wonbn)| [HyeMin](https://github.com/HyemIin) | [KyuCheol](https://github.com/Hwang-Kyu-Cheol) | [YoungHyen](https://github.com/dydgus1052) |
 | <ul><li>인증/인가</li><li>Spring 기본설계</li><li>Github Actions</li><li>AWS S3</li><li>Nginx</li><li>Mypage API</li><li>Product API</li></ul> | <ul><li>채팅 API</li></ul> | <ul><li>상품 관심목록 API</li><li>상품 채팅목록 API</li><li>상품 상태변경 API</li><li>상품 카테고리 API</li></ul> | <ul><li>상품 CRUD API</li><li>상품 전체조회 API</li><li>상품 상세조회 API</li></ul> |
 
