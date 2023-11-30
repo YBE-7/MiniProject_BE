@@ -69,3 +69,5 @@ API 설계서 Link : [API 명세서](https://github.com/Hwang-Kyu-Cheol/yanolja_
 | [WonBin](https://github.com/Wonbn)| [HyeMin](https://github.com/HyemIin) | [KyuCheol](https://github.com/Hwang-Kyu-Cheol) | [YoungHyen](https://github.com/dydgus1052) |
 | <ul><li>장바구니 API</li><li>AWS LB</li> | <ul><li>회원 API</li></ul><ul><li>AWS EC2,RDS</li></ul> | <ul><li>숙소 API</li><li>객실타입 API</li> | <ul><li>주문 API</li> |
 
+## 서버 실행 화면
+<img width="1694" alt="image" src="https://github.com/YBE-7/YBE-Mini-Project-BE/assets/114489245/4cd42166-e1b8-4c2e-9464-8da5ae833754">
