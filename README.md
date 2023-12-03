@@ -1,5 +1,5 @@
 # 미니 프로젝트 : 숙박 예약 API 서비스 
-## 서비스 : https://mini-team-7.vercel.app/resort
+## 서비스 : https://mini-team-7.vercel.app
 
 
 ## 🖥 프로젝트 개요
