@@ -17,6 +17,8 @@ public class OrderServiceFacade {
     private static final int LOCK_WAIT_TIME = 3;
     private static final int LOCK_LEASE_TIME = 1;
     private static final String LOCK_NAME_PREFIX = "order_lock_";
+    private static final String LOCK_EXCEPTION_MESSAGE = "Lock을 획득하지 못했습니다.";
+    private static final String INTERRUPTED_EXCEPTION_MESSAGE = "Lock을 획득하는 동안 인터럽트가 발생했습니다.";
 
     private final OrderService orderService;
     private final RedissonClient redissonClient;
@@ -37,10 +39,10 @@ public class OrderServiceFacade {
                     redissonClient.getMultiLock(locks).unlock();
                 }
             } else {
-                throw new RuntimeException("Lock을 획득하지 못했습니다.");
+                throw new RuntimeException(LOCK_EXCEPTION_MESSAGE);
             }
         } catch (InterruptedException ex) {
-            throw new RuntimeException("Lock을 획득하는 동안 인터럽트가 발생했습니다.", ex);
+            throw new RuntimeException(INTERRUPTED_EXCEPTION_MESSAGE, ex);
         }
     }
 }
