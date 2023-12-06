@@ -80,7 +80,7 @@ class OrderServiceConcurrencyTest {
         Accommodation accommodation = singleAccommodation();
         RoomType roomType = singleRoomType(accommodation);
         Room room1 = singleRoom(roomType);
-        //Room room2 = singleRoom(roomType);
+        Room room2 = singleRoom(roomType);
         List<Long> memberIds = new ArrayList<>();
         for (int i = 0; i < threadCount; i++) {
             Member member = memberRepository.save(
@@ -99,13 +99,13 @@ class OrderServiceConcurrencyTest {
             LocalDate.of(2023, 12, 1),
             LocalDate.of(2023, 12, 3)
         );
-//        OrderItemRegisterRequest orderItemRegisterRequest2 = new OrderItemRegisterRequest(
-//            roomType.getId(),
-//            LocalDate.of(2023, 11, 30),
-//            LocalDate.of(2023, 12, 2)
-//        );
+        OrderItemRegisterRequest orderItemRegisterRequest2 = new OrderItemRegisterRequest(
+            roomType.getId(),
+            LocalDate.of(2023, 11, 30),
+            LocalDate.of(2023, 12, 2)
+        );
         OrderRegisterRequest orderRegisterRequest = new OrderRegisterRequest(
-            List.of(orderItemRegisterRequest1),
+            List.of(orderItemRegisterRequest1, orderItemRegisterRequest2),
             new ClientRequest("name", "010"),
             new SubscriberRequest("name", "010"),
             NAVER_PAY
