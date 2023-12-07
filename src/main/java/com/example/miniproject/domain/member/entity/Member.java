@@ -30,15 +30,19 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private Member(String email, String name, String password, Role role) {
+    @Column(nullable = false)
+    private String phoneNumber;
+
+    private Member(String email, String name, String password, Role role, String phoneNumber) {
         this.email = email;
         this.name = name;
         this.password = password;
         this.role = role;
+        this.phoneNumber = phoneNumber;
     }
 
-    public static Member create(String email, String name, String password, Role role) {
-        return new Member(email, name, password, role);
+    public static Member create(String email, String name, String password, Role role, String phoneNumber) {
+        return new Member(email, name, password, role, phoneNumber);
     }
 
     public void encodePassword(PasswordEncoder passwordEncoder) {
