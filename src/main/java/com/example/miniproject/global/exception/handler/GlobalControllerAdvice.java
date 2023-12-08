@@ -30,7 +30,8 @@ public class GlobalControllerAdvice {
         DuplicateEmailException.class,
         InvalidParamException.class,
         NoStockException.class,
-        MemberNotFoundException.class
+        MemberNotFoundException.class,
+        DuplicatePhoneNumberException.class
     })
     public ResponseEntity<?> handleCustomException(
         RuntimeException ex
