@@ -1,5 +1,6 @@
 package com.example.miniproject.domain.member.controller;
 
+import com.example.miniproject.domain.member.dto.request.MemberAccountInfoRequest;
 import com.example.miniproject.domain.member.dto.request.MemberLoginRequest;
 import com.example.miniproject.domain.member.dto.request.MemberSignUpRequest;
 import com.example.miniproject.domain.member.service.MemberService;
@@ -67,6 +68,19 @@ public class MemberController {
             .body(
                 ApiUtils.success(
                     memberService.getOrders(memberDetails.getId())
+                )
+            );
+    }
+
+    @PostMapping("/accountInfoFind")
+    public ResponseEntity<?> findId(
+        @RequestBody @Valid MemberAccountInfoRequest request
+    ) throws Exception {
+        return ResponseEntity
+            .ok()
+            .body(
+                ApiUtils.success(
+                    memberService.findId(request)
                 )
             );
     }

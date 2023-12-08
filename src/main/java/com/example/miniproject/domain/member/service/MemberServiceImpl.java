@@ -1,19 +1,18 @@
 package com.example.miniproject.domain.member.service;
 
 import com.example.miniproject.domain.accommodation.entity.Accommodation;
+import com.example.miniproject.domain.member.dto.request.MemberAccountInfoRequest;
 import com.example.miniproject.domain.member.dto.request.MemberLoginRequest;
 import com.example.miniproject.domain.member.dto.request.MemberSignUpRequest;
-import com.example.miniproject.domain.member.dto.response.MemberLoginResponse;
-import com.example.miniproject.domain.member.dto.response.MemberMyPageResponse;
-import com.example.miniproject.domain.member.dto.response.MemberSignUpResponse;
-import com.example.miniproject.domain.member.dto.response.OrderItemResponse;
-import com.example.miniproject.domain.member.dto.response.OrderResponse;
+import com.example.miniproject.domain.member.dto.response.*;
 import com.example.miniproject.domain.member.entity.Member;
 import com.example.miniproject.domain.member.repository.MemberRepository;
 import com.example.miniproject.domain.order.entity.Order;
 import com.example.miniproject.domain.order.repository.OrderRepository;
 import com.example.miniproject.domain.roomtype.entity.RoomType;
 import com.example.miniproject.global.exception.DuplicateEmailException;
+import com.example.miniproject.global.exception.DuplicatePhoneNumberException;
+import com.example.miniproject.global.exception.MemberNotFoundException;
 import com.example.miniproject.global.security.JwtService;
 import com.example.miniproject.global.security.MemberDetails;
 import java.util.List;
@@ -38,7 +37,8 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public MemberSignUpResponse signUp(MemberSignUpRequest request) {
-        validateDuplicateEmail(request.email());
+        validateDuplicateEmailAndPhoneNumber(request.email(), request.phoneNumber());
+
 
         Member member = request.toEntity();
         member.encodePassword(passwordEncoder);
@@ -79,6 +79,15 @@ public class MemberServiceImpl implements MemberService {
             .toList();
     }
 
+    @Override
+    public MemberAccountInfoResponse findId(MemberAccountInfoRequest request) {
+        Member member = memberRepository.findByPhoneNumber(request.phoneNumber())
+            .orElseThrow(MemberNotFoundException::new);
+
+        return new MemberAccountInfoResponse(member);
+
+    }
+
     private List<OrderItemResponse> getOrderItemResponses(Order order) {
         return order.getOrderItems()
             .stream()
@@ -94,10 +103,15 @@ public class MemberServiceImpl implements MemberService {
             .toList();
     }
 
-    private void validateDuplicateEmail(String email) {
+    private void validateDuplicateEmailAndPhoneNumber(String email, String phoneNumber) {
         memberRepository.findByEmail(email)
             .ifPresent(member -> {
                 throw new DuplicateEmailException();
+            });
+
+        memberRepository.findByPhoneNumber(phoneNumber)
+            .ifPresent(member -> {
+                throw new DuplicatePhoneNumberException();
             });
     }
 }
