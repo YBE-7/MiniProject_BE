@@ -52,6 +52,7 @@ public class SecurityConfig {
                 registry -> registry
                     .requestMatchers(HttpMethod.POST, "/api/members/signup").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/members/login").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/members/accountInfoFind").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/accommodations/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/roomtypes/**").permitAll()
 
