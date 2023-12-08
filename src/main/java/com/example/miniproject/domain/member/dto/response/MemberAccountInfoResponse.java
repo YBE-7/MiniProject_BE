@@ -4,7 +4,6 @@ import com.example.miniproject.domain.member.entity.Member;
 import jakarta.validation.constraints.NotBlank;
 
 public record MemberAccountInfoResponse(
-    @NotBlank
     String email
 ) {
     public MemberAccountInfoResponse(Member member) {

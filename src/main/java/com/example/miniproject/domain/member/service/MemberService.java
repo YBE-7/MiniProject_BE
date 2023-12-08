@@ -17,5 +17,5 @@ public interface MemberService {
 
     List<OrderResponse> getOrders(Long id);
 
-    MemberAccountInfoResponse findId(MemberAccountInfoRequest request) throws IllegalAccessException, Exception;
+    MemberAccountInfoResponse findId(MemberAccountInfoRequest request);
 }

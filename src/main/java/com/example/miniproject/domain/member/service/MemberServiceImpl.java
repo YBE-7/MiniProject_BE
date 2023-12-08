@@ -11,6 +11,7 @@ import com.example.miniproject.domain.order.entity.Order;
 import com.example.miniproject.domain.order.repository.OrderRepository;
 import com.example.miniproject.domain.roomtype.entity.RoomType;
 import com.example.miniproject.global.exception.DuplicateEmailException;
+import com.example.miniproject.global.exception.DuplicatePhoneNumberException;
 import com.example.miniproject.global.exception.MemberNotFoundException;
 import com.example.miniproject.global.security.JwtService;
 import com.example.miniproject.global.security.MemberDetails;
@@ -36,7 +37,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public MemberSignUpResponse signUp(MemberSignUpRequest request) {
-        validateDuplicateEmail(request.email(), request.phoneNumber());
+        validateDuplicateEmailAndPhoneNumber(request.email(), request.phoneNumber());
 
 
         Member member = request.toEntity();
@@ -79,11 +80,11 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public MemberAccountInfoResponse findId(MemberAccountInfoRequest request) throws Exception {
-        Member nowMember = memberRepository.findByPhoneNumber(request.phoneNumber())
+    public MemberAccountInfoResponse findId(MemberAccountInfoRequest request) {
+        Member member = memberRepository.findByPhoneNumber(request.phoneNumber())
             .orElseThrow(MemberNotFoundException::new);
 
-        return new MemberAccountInfoResponse(nowMember);
+        return new MemberAccountInfoResponse(member);
 
     }
 
@@ -102,7 +103,7 @@ public class MemberServiceImpl implements MemberService {
             .toList();
     }
 
-    private void validateDuplicateEmail(String email, String phoneNumber) {
+    private void validateDuplicateEmailAndPhoneNumber(String email, String phoneNumber) {
         memberRepository.findByEmail(email)
             .ifPresent(member -> {
                 throw new DuplicateEmailException();
@@ -110,7 +111,7 @@ public class MemberServiceImpl implements MemberService {
 
         memberRepository.findByPhoneNumber(phoneNumber)
             .ifPresent(member -> {
-                throw new DuplicateEmailException();
+                throw new DuplicatePhoneNumberException();
             });
     }
 }
